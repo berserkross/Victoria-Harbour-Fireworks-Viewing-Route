@@ -1,0 +1,534 @@
+#!/usr/bin/env node
+/**
+ * build.mjs — 把 content/*.md + src/template.html 生成为仓库根目录的 index.html
+ *
+ * 用法：
+ *     node build.mjs
+ *
+ * 无任何第三方依赖，只需要 Node.js 18+。GitHub Actions 会在每次 push 后自动执行它。
+ * 日常改文案请只改 content/*.md；改结构请改 src/template.html。
+ */
+
+import { readFileSync, writeFileSync, mkdirSync, cpSync, existsSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const ROOT = dirname(fileURLToPath(import.meta.url));
+const P = (...p) => join(ROOT, ...p);
+
+/* ------------------------------------------------------------------ 工具 */
+
+const escapeHtml = (s) =>
+  String(s ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+
+/** 只允许 http(s)、mailto、站内相对路径与锚点，防止误注入 javascript: */
+function safeUrl(u) {
+  const s = String(u ?? '').trim();
+  if (/^(javascript|data|vbscript):/i.test(s)) return '#';
+  if (/^https?:/i.test(s) || /^mailto:/i.test(s) || /^#/.test(s) || /^\.{0,2}\//.test(s) || /^[\w\u4e00-\u9fa5][^:]*$/.test(s)) {
+    return s;
+  }
+  return '#';
+}
+
+/** 标题 -> 稳定、可读的锚点 id */
+function slug(text, used) {
+  let base = String(text)
+    .toLowerCase()
+    .replace(/[^\w\u4e00-\u9fa5\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .slice(0, 40);
+  if (!base) base = 'sec';
+  let id = base;
+  if (used.has(id)) {
+    id = `${base}-${createHash('sha1').update(String(text)).digest('hex').slice(0, 4)}`;
+  }
+  used.add(id);
+  return id;
+}
+
+/** 行内 Markdown：`code` **bold** *em* [text](url) <url> ![alt](src "cap") */
+function inline(src) {
+  let s = String(src ?? '');
+  const stash = [];
+  const keep = (html) => {
+    stash.push(html);
+    return `\u0000${stash.length - 1}\u0000`;
+  };
+
+  // 图片先占位，避免其中的 * _ 被后续规则改写
+  s = s.replace(/!\[([^\]]*)\]\(\s*([^)\s]+)(?:\s+"([^"]*)")?\s*\)/g, (_, alt, src2, cap) =>
+    keep(
+      `<img class="inline-img" src="${escapeHtml(safeUrl(src2))}" alt="${escapeHtml(alt)}"` +
+        (cap ? ` title="${escapeHtml(cap)}"` : '') +
+        ` loading="lazy" decoding="async">`
+    )
+  );
+
+  s = escapeHtml(s);
+
+  s = s.replace(/`([^`]+)`/g, (_, c) => keep(`<code>${c}</code>`));
+  s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
+  s = s.replace(/~~([^~]+)~~/g, '<del>$1</del>');
+  s = s.replace(/\[([^\]]+)\]\(\s*([^)\s]+)\s*\)/g, (_, t, u) => `<a href="${escapeHtml(safeUrl(u))}" target="_blank" rel="noopener">${t}</a>`);
+  s = s.replace(/&lt;(https?:\/\/[^&\s]+)&gt;/g, (_, u) => `<a href="${escapeHtml(u)}" target="_blank" rel="noopener">${u}</a>`);
+
+  return s.replace(/\u0000(\d+)\u0000/g, (_, i) => stash[Number(i)]);
+}
+
+/* --------------------------------------------------- 自定义块（```lang） */
+
+/** 去掉包裹标量的成对引号："1" / '1' -> 1 */
+function unquote(s) {
+  const t = String(s ?? '').trim();
+  if (t.length >= 2 && ((t[0] === '"' && t.endsWith('"')) || (t[0] === "'" && t.endsWith("'")))) {
+    return t.slice(1, -1).trim();
+  }
+  return t;
+}
+
+/**
+ * 解析块内的"字段: 值"行。
+ *     tone: paid            ← 无缩进或带缩进都行
+ *     - src: xxx.mp4        ← 前面带 "- " 也行
+ * 后续缩进更深的行会接到上一个字段后面（便于写长句）。
+ */
+function parsePairs(lines) {
+  const out = {};
+  let key = null;
+  for (const raw of lines) {
+    const m = /^\s*(?:-\s+)?([\w-]+)\s*:\s*(.*)$/.exec(raw);
+    if (m) {
+      key = m[1];
+      out[key] = unquote(m[2]);
+    } else if (key && raw.trim()) {
+      out[key] += ' ' + raw.trim();
+    }
+  }
+  return out;
+}
+
+/**
+ * 解析数组块：每一项由"无缩进的 `- ` 开头"，其后缩进的行是该项目的字段。
+ * 兼容两种写法：
+ *     - text             （第一项的内容直接跟在短横线后）
+ *       img: xxx.jpg
+ *     - title: 标题       （第一项直接以字段开始）
+ *       img: xxx.jpg
+ */
+function parseItems(lines) {
+  const items = [];
+  let cur = null;
+  for (const raw of lines) {
+    if (/^\s*$/.test(raw)) continue;
+    const startNew = /^-\s+\S/.test(raw);
+    if (startNew) {
+      cur = [];
+      items.push(cur);
+      const m = /^-\s+([\w-]+)\s*:\s*(.*)$/.exec(raw);
+      if (m) cur.push(`${m[1]}: ${m[2]}`);
+      else cur.push(`text: ${raw.replace(/^-\s+/, '')}`);
+      continue;
+    }
+    if (cur) cur.push(raw);
+  }
+  return items.map(parsePairs);
+}
+
+function renderMeta(p) {
+  const tone = ['paid', 'warn', 'free', ''].includes((p.tone ?? '').trim()) ? (p.tone ?? '').trim() : '';
+  return `<aside class="meta${tone ? ' meta--' + tone : ''}">
+${p.tag ? `<p class="meta__tag">${inline(p.tag)}</p>` : ''}
+${p.summary ? `<p class="meta__summary">${inline(p.summary)}</p>` : ''}
+</aside>`;
+}
+
+function renderCards(lines) {
+  const items = parseItems(lines);
+  const html = items.map((p) => {
+    const tone = ['paid', 'warn', 'free'].includes((p.tone ?? '').trim()) ? ` card--${p.tone.trim()}` : '';
+    const rows = [
+      ['best', '优势', p.best],
+      ['worst', '代价', p.worst],
+    ]
+      .filter(([, , v]) => v)
+      .map(([k, label, v]) => `<div class="card__row card__row--${k}"><dt>${label}</dt><dd>${inline(v)}</dd></div>`)
+      .join('\n');
+    return `<article class="card${tone}">
+${p.badge ? `<p class="card__badge">${inline(p.badge)}</p>` : ''}
+<h3 class="card__title">${inline(p.title)}</h3>
+${p.sub ? `<p class="card__sub">${inline(p.sub)}</p>` : ''}
+${rows ? `<dl class="card__rows">\n${rows}\n</dl>` : ''}
+</article>`;
+  });
+  return `<div class="cards">\n${html.join('\n')}\n</div>`;
+}
+
+function renderSteps(lines) {
+  const items = parseItems(lines);
+  let counter = 0;
+  const html = items.map((p) => {
+    counter += 1;
+    const n = p.n ?? String(counter);
+    const img = p.img && p.img.trim() && p.img.trim() !== 'null'
+      ? `<figure class="step__figure">
+<img src="${escapeHtml(safeUrl(p.img))}" alt="${escapeHtml(p.cap || p.title || '')}" loading="lazy" decoding="async">
+${p.cap ? `<figcaption>${inline(p.cap)}</figcaption>` : ''}
+</figure>`
+      : '';
+    const note = p.note ? `<p class="step__note">${inline(p.note)}</p>` : '';
+    return `<li class="step"${p.img ? ' data-has-img="1"' : ''}>
+<span class="step__n" aria-hidden="true">${escapeHtml(n)}</span>
+<div class="step__body">
+<p class="step__title">${inline(p.title)}</p>
+${note}
+${img}
+</div>
+</li>`;
+  });
+  return `<ol class="steps">\n${html.join('\n')}\n</ol>`;
+}
+
+function renderVideo(p) {
+  return `<figure class="video">
+<video controls preload="metadata" playsinline${p.poster ? ` poster="${escapeHtml(safeUrl(p.poster))}"` : ''}>
+<source src="${escapeHtml(safeUrl(p.src))}" type="video/mp4">
+你的浏览器不支持 HTML5 视频，请<a href="${escapeHtml(safeUrl(p.src))}">点此下载视频</a>。
+</video>
+${p.title || p.desc ? `<figcaption>${p.title ? `<strong>${inline(p.title)}</strong>` : ''}${p.title && p.desc ? ' — ' : ''}${p.desc ? inline(p.desc) : ''}</figcaption>` : ''}
+</figure>`;
+}
+
+function renderChecklist(lines) {
+  let group = '';
+  let gi = 0;
+  const groups = [];
+  for (const raw of lines) {
+    const g = /^\s*group\s*:\s*(.+)$/.exec(raw);
+    if (g) {
+      group = unquote(g[1]);
+      gi += 1;
+      groups.push({ id: 'g' + gi, label: group, items: [] });
+      continue;
+    }
+    const it = /^-\s+(.+)$/.exec(raw);
+    if (it) {
+      const [text, note] = it[1].split('|').map((x) => x.trim());
+      if (!groups.length) {
+        gi += 1;
+        groups.push({ id: 'g' + gi, label: '', items: [] });
+      }
+      groups[gi - 1].items.push({ text, note: note || '' });
+    }
+  }
+  const body = groups
+    .map((grp) => {
+      const lis = grp.items
+        .map((it, i) => {
+          const id = `${grp.id}-i${i + 1}`;
+          return `<li class="check">
+<input type="checkbox" id="${id}" data-check="${id}">
+<label for="${id}">
+<span class="check__text">${inline(it.text)}</span>
+${it.note ? `<span class="check__note">${inline(it.note)}</span>` : ''}
+</label>
+</li>`;
+        })
+        .join('\n');
+      return `<div class="checkgroup">
+${grp.label ? `<h3 class="checkgroup__title">${inline(grp.label)}</h3>` : ''}
+<ul class="checklist">
+${lis}
+</ul>
+</div>`;
+    })
+    .join('\n');
+
+  const total = groups.reduce((n, g) => n + g.items.length, 0);
+  return `<div class="checklist-widget" data-checklist>
+<div class="checklist-widget__bar">
+<span class="checklist-widget__count" data-check-count>0 / ${total}</span>
+<button type="button" class="btn btn--ghost" data-check-reset>全部清空</button>
+</div>
+${body}
+</div>`;
+}
+
+/* ------------------------------------------------------ Markdown 块解析 */
+
+function renderList(lines) {
+  const items = [];
+  let cur = null;
+  for (const raw of lines) {
+    const top = /^[-*]\s+(.*)$/.exec(raw);
+    const sub = /^\s+[-*]\s+(.*)$/.exec(raw);
+    if (sub && cur) {
+      cur.sub.push(sub[1]);
+    } else if (top) {
+      cur = { text: top[1], sub: [] };
+      items.push(cur);
+    } else if (cur && /^\s+\S/.test(raw)) {
+      (cur.sub.length ? cur.sub : [cur]).push(raw.trim());
+    }
+  }
+  const html = items
+    .map((it) => {
+      const sub = it.sub.length
+        ? `\n<ul class="list list--sub">\n${it.sub.map((s) => `<li>${inline(Array.isArray(s) ? s.join(' ') : s)}</li>`).join('\n')}\n</ul>`
+        : '';
+      return `<li>${inline(it.text)}${sub}</li>`;
+    })
+    .join('\n');
+  return `<ul class="list">\n${html}\n</ul>`;
+}
+
+/**
+ * 把一段 Markdown 渲染成 HTML。
+ * 返回 { html, headings: [{ level, text, id }] }
+ */
+function renderMarkdown(src, opts = {}) {
+  const lines = String(src).replace(/\r\n?/g, '\n').split('\n');
+  const used = opts.used ?? new Set();
+  const headings = [];
+  const out = [];
+  let i = 0;
+
+  const flushParagraph = (buf) => {
+    if (!buf.length) return;
+    out.push(`<p>${inline(buf.join(' '))}</p>`);
+    buf.length = 0;
+  };
+  const para = [];
+
+  while (i < lines.length) {
+    const line = lines[i];
+
+    // ---- 围栏块 ----
+    const fence = /^```(\w+)\s*$/.exec(line);
+    if (fence) {
+      flushParagraph(para);
+      const lang = fence[1];
+      const body = [];
+      i += 1;
+      while (i < lines.length && !/^```\s*$/.test(lines[i])) {
+        body.push(lines[i]);
+        i += 1;
+      }
+      i += 1; // 跳过收尾的 ```
+      if (lang === 'meta') out.push(renderMeta(parsePairs(body)));
+      else if (lang === 'cards') out.push(renderCards(body));
+      else if (lang === 'steps') out.push(renderSteps(body));
+      else if (lang === 'video') out.push(renderVideo(parsePairs(body)));
+      else if (lang === 'checklist') out.push(renderChecklist(body));
+      else out.push(`<pre class="code"><code>${escapeHtml(body.join('\n'))}</code></pre>`);
+      continue;
+    }
+
+    // ---- 标题 ----
+    const h = /^(#{1,6})\s+(.*?)\s*$/.exec(line);
+    if (h) {
+      flushParagraph(para);
+      const level = h[1].length;
+      const text = h[2];
+      const id = slug(text, used);
+      headings.push({ level, text, id });
+      out.push(`<h${level} id="${id}"><a class="anchor" href="#${id}" aria-label="本节链接">#</a>${inline(text)}</h${level}>`);
+      i += 1;
+      continue;
+    }
+
+    // ---- 分隔线 ----
+    if (/^(-{3,}|\*{3,}|_{3,})\s*$/.test(line)) {
+      flushParagraph(para);
+      out.push('<hr>');
+      i += 1;
+      continue;
+    }
+
+    // ---- 列表 ----
+    if (/^[-*]\s+\S/.test(line) || /^\s+[-*]\s+\S/.test(line)) {
+      flushParagraph(para);
+      const buf = [];
+      while (i < lines.length && (/^[-*]\s+\S/.test(lines[i]) || /^\s+[-*]\s+\S/.test(lines[i]) || /^\s+\S/.test(lines[i]))) {
+        buf.push(lines[i]);
+        i += 1;
+      }
+      out.push(renderList(buf));
+      continue;
+    }
+
+    // ---- 引用 ----
+    if (/^>\s?/.test(line)) {
+      flushParagraph(para);
+      const buf = [];
+      while (i < lines.length && /^>\s?/.test(lines[i])) {
+        buf.push(lines[i].replace(/^>\s?/, ''));
+        i += 1;
+      }
+      out.push(`<blockquote class="quote">${renderMarkdown(buf.join('\n'), { used }).html}</blockquote>`);
+      continue;
+    }
+
+    // ---- 提示块 !!! ----
+    if (/^!!!\s?/.test(line)) {
+      flushParagraph(para);
+      const buf = [line.replace(/^!!!\s?/, '')];
+      i += 1;
+      while (i < lines.length && /^\s{2,}\S/.test(lines[i])) {
+        buf.push(lines[i].trim());
+        i += 1;
+      }
+      out.push(`<aside class="callout"><span class="callout__icon" aria-hidden="true">!</span><p>${inline(buf.join(' '))}</p></aside>`);
+      continue;
+    }
+
+    // ---- 表格 ----
+    if (/^\|/.test(line) && /^\|[\s:|-]+\|\s*$/.test(lines[i + 1] ?? '')) {
+      flushParagraph(para);
+      const cells = (r) => r.replace(/^\||\|$/g, '').split('|').map((c) => c.trim());
+      const head = cells(line);
+      i += 2;
+      const rows = [];
+      while (i < lines.length && /^\|/.test(lines[i])) {
+        rows.push(cells(lines[i]));
+        i += 1;
+      }
+      out.push(`<div class="tablewrap"><table>
+<thead><tr>${head.map((c) => `<th>${inline(c)}</th>`).join('')}</tr></thead>
+<tbody>${rows.map((r) => `<tr>${r.map((c) => `<td>${inline(c)}</td>`).join('')}</tr>`).join('')}</tbody>
+</table></div>`);
+      continue;
+    }
+
+    // ---- 空行 ----
+    if (!line.trim()) {
+      flushParagraph(para);
+      i += 1;
+      continue;
+    }
+
+    // ---- 段落 ----
+    para.push(line.trim());
+    i += 1;
+  }
+  flushParagraph(para);
+
+  return { html: out.join('\n'), headings };
+}
+
+/* ---------------------------------------------------------------- 装配 */
+
+function main() {
+  const cfg = JSON.parse(readFileSync(P('site.config.json'), 'utf8'));
+  const template = readFileSync(P('src', 'template.html'), 'utf8');
+  const usedIds = new Set();
+
+  const sections = [];
+  const toc = [];
+
+  for (const item of cfg.nav) {
+    const file = P('content', item.file);
+    if (!existsSync(file)) {
+      console.warn(`! content/${item.file} 不存在，已跳过`);
+      continue;
+    }
+    const raw = readFileSync(file, 'utf8');
+    const { html, headings } = renderMarkdown(raw, { used: usedIds });
+
+    // 首个 h1 作为章节标题，其余标题进目录
+    const h1 = headings.find((h) => h.level === 1);
+    const title = h1 ? h1.text : item.label;
+    const id = item.id;
+
+    toc.push({
+      id,
+      num: item.num ?? '',
+      label: item.label,
+      children: headings.filter((h) => h.level >= 2 && h.level <= 3).map((h) => ({ id: h.id, text: h.text, level: h.level })),
+    });
+
+    sections.push(`<section class="section" id="${id}" data-section="${id}">
+<header class="section__head">
+${item.num ? `<span class="section__num">${escapeHtml(item.num)}</span>` : ''}
+<h2 class="section__title">${inline(title)}</h2>
+</header>
+<div class="section__body">
+${html}
+</div>
+</section>`);
+  }
+
+  // ---- 目录 ----
+  const tocHtml = toc
+    .map((t) => {
+      const kids = t.children.length
+        ? `\n<ol class="toc__sub">\n${t.children
+            .map((c) => `<li class="toc__subitem toc__subitem--h${c.level}"><a href="#${c.id}"><span class="toc__dot"></span>${escapeHtml(c.text)}</a></li>`)
+            .join('\n')}\n</ol>`
+        : '';
+      return `<li class="toc__item">
+<a class="toc__link" href="#${t.id}"${t.children.length ? ' data-has-sub="1"' : ''}>
+${t.num ? `<span class="toc__num">${escapeHtml(t.num)}</span>` : ''}<span class="toc__label">${escapeHtml(t.label)}</span>
+</a>${kids}
+</li>`;
+    })
+    .join('\n');
+
+  const topnavHtml = toc
+    .map((t) => `<a href="#${t.id}">${t.num ? `<i>${escapeHtml(t.num)}</i>` : ''}${escapeHtml(t.label)}</a>`)
+    .join('');
+
+  const heroMeta = (cfg.hero.meta ?? []).map((m) => `<li>${escapeHtml(m)}</li>`).join('');
+
+  const now = new Date();
+  const buildDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+  const vars = {
+    LANG: cfg.site.lang ?? 'zh-CN',
+    TITLE: cfg.site.title,
+    SUBTITLE: cfg.site.subtitle,
+    DESCRIPTION: cfg.site.description,
+    KEYWORDS: (cfg.site.keywords ?? []).join(','),
+    AUTHOR: cfg.site.author,
+    REPO: cfg.site.repo,
+    HERO_KICKER: cfg.hero.kicker,
+    HERO_LEAD: cfg.hero.lead,
+    HERO_META: heroMeta,
+    TOC: tocHtml,
+    TOPNAV: topnavHtml,
+    SECTIONS: sections.join('\n\n'),
+    FOOTER_BRAND: cfg.footer.brand,
+    FOOTER_BRAND_EN: cfg.footer.brandEn,
+    FOOTER_CREDIT: cfg.footer.credit,
+    FOOTER_NOTE: cfg.footer.note,
+    FOOTER_DISCLAIMER: cfg.footer.disclaimer,
+    BUILD_DATE: buildDate,
+  };
+
+  let html = template;
+  for (const [k, v] of Object.entries(vars)) {
+    html = html.split(`{{${k}}}`).join(v);
+  }
+  const leftover = html.match(/\{\{[A-Z_]+\}\}/g);
+  if (leftover) throw new Error('模板里还有未替换的占位符：' + [...new Set(leftover)].join(', '));
+
+  writeFileSync(P('index.html'), html, 'utf8');
+
+  // assets/src → 根目录，保证 index.html 直接可用
+  mkdirSync(P('assets'), { recursive: true });
+  cpSync(P('src', 'css'), P('assets', 'css'), { recursive: true });
+  cpSync(P('src', 'js'), P('assets', 'js'), { recursive: true });
+
+  console.log(`✓ index.html  (${(Buffer.byteLength(html) / 1024).toFixed(1)} KB)`);
+  console.log(`✓ 章节 ${toc.length} 个，目录条目 ${toc.reduce((n, t) => n + t.children.length, 0)} 条`);
+  console.log(`✓ assets/css, assets/js 已同步`);
+}
+
+main();

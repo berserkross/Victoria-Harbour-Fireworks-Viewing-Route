@@ -1,0 +1,36 @@
+{
+  "site": {
+    "lang": "zh-CN",
+    "title": "国庆维港烟花路线",
+    "subtitle": "2026 香港国庆烟花汇演 · 观赏机位与交通全攻略",
+    "description": "从福田／罗湖口岸出发，四条维港烟花观赏路线、两条实测具体路线（太平山・宝马山）、支付方式与八达通办理指南。",
+    "keywords": ["香港", "国庆烟花", "维港烟花", "太平山", "宝马山", "观赏路线", "攻略"],
+    "author": "祥波书院 · 海洋影像厂",
+    "repo": "https://github.com/berserkross/Victoria-Harbour-Fireworks-Viewing-Route"
+  },
+
+  "hero": {
+    "kicker": "2026 · 香港国庆烟花汇演",
+    "title": "国庆维港烟花路线",
+    "lead": "四条观赏路线 · 两条实测具体路线 · 支付与八达通指南",
+    "meta": ["太平山观景台 实测走法", "宝马山观景台 实测走法", "含下车后步行视频"]
+  },
+
+  "nav": [
+    { "id": "intro",    "label": "写在前面", "file": "00-intro.md",    "num": "—" },
+    { "id": "routes",   "label": "四条路线", "file": "10-routes.md",   "num": "01" },
+    { "id": "route3",   "label": "具体路线・太平山", "file": "20-route3-peak.md", "num": "02" },
+    { "id": "route4",   "label": "具体路线・宝马山", "file": "30-route4-braemar.md", "num": "03" },
+    { "id": "payment",  "label": "支付方式", "file": "40-payment.md",  "num": "04" },
+    { "id": "octopus",  "label": "八达通",   "file": "50-octopus.md",  "num": "05" },
+    { "id": "checklist","label": "出发前检查清单", "file": "60-checklist.md", "num": "06" }
+  ],
+
+  "footer": {
+    "brand": "祥波书院 · 海洋影像厂",
+    "brandEn": "XIANGBO COLLEGE · OCEAN IMAGE STUDIO",
+    "credit": "出品",
+    "note": "本页内容依据原始攻略《国庆维港烟花路线》（Markdown / XMind / PDF）整理排版，图源同源。",
+    "disclaimer": "路线信息具有时效性：烟花汇演安排、巴士／小巴班次与票价、商场入场安排均可能变动，出行前请以官方最新公告为准。"
+  }
+}

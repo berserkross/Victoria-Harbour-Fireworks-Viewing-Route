@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="{{LANG}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{{TITLE}}</title>
+<meta name="description" content="{{DESCRIPTION}}">
+<meta name="keywords" content="{{KEYWORDS}}">
+<meta name="author" content="{{AUTHOR}}">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0a0d18">
+<link rel="icon" href="assets/img/brand-logo.jpg">
+<meta property="og:type" content="article">
+<meta property="og:title" content="{{TITLE}}">
+<meta property="og:description" content="{{DESCRIPTION}}">
+<meta property="og:image" content="assets/img/route1-klook-ticket.jpg">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/layout.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/sections.css">
+<!-- 由 build.mjs 生成，请勿直接编辑本文件：改内容请编辑 content/*.md，改结构请编辑 src/template.html -->
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到正文</a>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <a class="brand" href="#top">
+      <span class="brand__mark" aria-hidden="true"></span>
+      <span class="brand__text">
+        <strong>{{TITLE}}</strong>
+        <small>{{SUBTITLE}}</small>
+      </span>
+    </a>
+    <nav class="topnav" aria-label="章节导航">{{TOPNAV}}</nav>
+    <button class="navtoggle" type="button" aria-expanded="false" aria-controls="toc" aria-label="打开目录">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="progress" aria-hidden="true"><i id="progressBar"></i></div>
+</header>
+
+<div class="shell" id="top">
+
+  <aside class="toc" id="toc" aria-label="目录">
+    <p class="toc__title">目录</p>
+    <ol class="toc__list">
+{{TOC}}
+    </ol>
+    <p class="toc__foot">
+      <a href="{{REPO}}" target="_blank" rel="noopener">在 GitHub 查看 / 提交修改 ↗</a>
+    </p>
+  </aside>
+
+  <main class="main" id="main">
+
+    <section class="hero">
+      <p class="hero__kicker">{{HERO_KICKER}}</p>
+      <h1 class="hero__title">{{TITLE}}</h1>
+      <p class="hero__lead">{{HERO_LEAD}}</p>
+      <ul class="hero__meta">{{HERO_META}}</ul>
+      <p class="hero__scroll"><span aria-hidden="true">↓</span> 向下滚动开始阅读</p>
+    </section>
+
+{{SECTIONS}}
+
+    <footer class="footer">
+      <div class="footer__brand">
+        <img src="assets/img/brand-logo.jpg" alt="{{FOOTER_BRAND}}" width="60" height="60">
+        <div>
+          <p class="footer__cn">{{FOOTER_BRAND}}</p>
+          <p class="footer__en">{{FOOTER_BRAND_EN}}</p>
+        </div>
+        <p class="footer__credit">{{FOOTER_CREDIT}}</p>
+      </div>
+      <p class="footer__note">{{FOOTER_NOTE}}</p>
+      <p class="footer__disclaimer">{{FOOTER_DISCLAIMER}}</p>
+      <p class="footer__meta">
+        <a href="{{REPO}}" target="_blank" rel="noopener">GitHub 仓库</a>
+        <span>·</span>
+        <span>最后更新：{{BUILD_DATE}}</span>
+      </p>
+    </footer>
+
+  </main>
+</div>
+
+<button class="totop" type="button" id="toTop" aria-label="回到顶部">↑</button>
+
+<div class="lightbox" id="lightbox" hidden>
+  <button class="lightbox__close" type="button" aria-label="关闭">×</button>
+  <button class="lightbox__prev" type="button" aria-label="上一张">‹</button>
+  <img class="lightbox__img" alt="">
+  <button class="lightbox__next" type="button" aria-label="下一张">›</button>
+  <p class="lightbox__cap"></p>
+</div>
+
+<script src="assets/js/toc.js" defer></script>
+<script src="assets/js/lightbox.js" defer></script>
+<script src="assets/js/checklist.js" defer></script>
+</body>
+</html>

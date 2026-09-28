@@ -1,0 +1,205 @@
+{
+ "note": "网页图片由原始攻略 .xmind 的内嵌资源（与 .pdf 内嵌为同一批图）提取压缩而来；xmindResource 是 .xmind 内 resources/ 下的文件名，orig 是工作区中的原始照片文件（若为 null 则该图只存在于 .xmind 内）。",
+ "maxEdge": 1920,
+ "imageBudgetBytes": 307200,
+ "images": [
+  {
+   "name": "route1-klook-ticket",
+   "xmindResource": "resources/c0b56390328fa08848356be0889971aa5fa6903aa88a78273781d4dad70291c1.png",
+   "orig": null,
+   "bytes": 156581,
+   "q": null
+  },
+  {
+   "name": "route3-01-c1-exit-sign",
+   "xmindResource": "resources/6acf5d802aec56d59e64967503ca73880f03aaab498aa44c2b05679fa8f3c1cc.png",
+   "orig": "Img/15路-金钟站.jpg",
+   "bytes": 251660,
+   "q": null
+  },
+  {
+   "name": "route3-02-follow-signs",
+   "xmindResource": "resources/e60d694e0ad41bb9af8153322f71aab60398955701bdf07ca4b9d10fb7baafa1.png",
+   "orig": "Img/15路站牌.jpg",
+   "bytes": 77831,
+   "q": null
+  },
+  {
+   "name": "route3-03-citybus-15",
+   "xmindResource": "resources/d6d00e6e9eab2637c2349157fdec951be457a8d637282e2f2783e34a3fe1b267.png",
+   "orig": "Img/15路站牌.jpg",
+   "bytes": 171744,
+   "q": null
+  },
+  {
+   "name": "route3-04-bus-front",
+   "xmindResource": "resources/632ba192ac60e292f8085532b05cb30a8a9a0717017cb0940dac3f349dc1c8ff.png",
+   "orig": "Img/CityBus 15.jpg",
+   "bytes": 155566,
+   "q": null
+  },
+  {
+   "name": "route3-05-short-corridor",
+   "xmindResource": "resources/25bfab0528a12b997d07b0c600debe84a71aa67d1ca37e62e48cf3b4b03d8146.jpg",
+   "orig": "Img/MVIMG_20260924_141128.jpg",
+   "bytes": 292529,
+   "q": null
+  },
+  {
+   "name": "route3-06-telescope",
+   "xmindResource": "resources/3e022b97ffbadf4661407b2a4f7e8d8c6e9e6b6f857c37c163e3651cf7cb960d.jpg",
+   "orig": "Img/MVIMG_20260924_141120.jpg",
+   "bytes": 73533,
+   "q": null
+  },
+  {
+   "name": "route3-07-arrived",
+   "xmindResource": "resources/723540609c9929a5e7277d78cf713ea3930f721568d1b88131f9de3225a8d538.jpg",
+   "orig": "Img/MVIMG_20260924_140616.jpg",
+   "bytes": 270961,
+   "q": null
+  },
+  {
+   "name": "route4-01-minibus-49m",
+   "xmindResource": "resources/65585d2d3a790800ab062f6197d8004072cb377dfbd81e004326bcf199390ed1.jpg",
+   "orig": "Img/49M.jpg",
+   "bytes": 245653,
+   "q": null
+  },
+  {
+   "name": "route4-02-braemar-hill-garden",
+   "xmindResource": "resources/ff2d4e5c5dfa2d7430b9bcd7c649c44192c8dcafbaeb61a98a9cf2900298315b.jpg",
+   "orig": "Img/MVIMG_20260924_171529.jpg",
+   "bytes": 274108,
+   "q": 8
+  },
+  {
+   "name": "route4-03-security-room",
+   "xmindResource": "resources/b2aff6ec3807ad3c13f61f125abda3461ccfd8888e4618705c0d5929fa073eee.jpg",
+   "orig": "Img/MVIMG_20260924_171744.jpg",
+   "bytes": 288270,
+   "q": 4
+  },
+  {
+   "name": "route4-04-green-fence",
+   "xmindResource": "resources/25abfb505cf5887178b97d8a0b6421915ecfa229cda459ee84a1a15de138b24c.jpg",
+   "orig": "Img/MVIMG_20260924_172013.jpg",
+   "bytes": 267640,
+   "q": 10
+  },
+  {
+   "name": "route4-05-green-gate",
+   "xmindResource": "resources/69d4ec76e24d70741fb79bc0783e567535eb5a9fcb3aa9448a7ee3b9151bd28a.jpg",
+   "orig": "Img/Braemar Hill~1/Image22.jpg",
+   "bytes": 75015,
+   "q": 4
+  },
+  {
+   "name": "route4-06-push-door",
+   "xmindResource": "resources/5ed863bf28eca6e16d32d2ff930e6ef504d14291b2b9d52a058a6e03a107c806.jpg",
+   "orig": "Img/Braemar Hill~1/Image27.jpg",
+   "bytes": 64627,
+   "q": 4
+  },
+  {
+   "name": "route4-07-enter",
+   "xmindResource": "resources/6cdd37bc479cbe76ed837cfb9c62035c984a0b79bd783de4d558ad871d779a8d.jpg",
+   "orig": "Img/Braemar Hill~1/Image32.jpg",
+   "bytes": 66341,
+   "q": 4
+  },
+  {
+   "name": "route4-08-stairs-up",
+   "xmindResource": "resources/c1d0abfc41b298b23792a27aa9334fd2ad16acc8bc855075585c61a4ab993e8d.jpg",
+   "orig": "Img/Braemar Hill~1/Image33.jpg",
+   "bytes": 33799,
+   "q": 4
+  },
+  {
+   "name": "route4-09-path-fork",
+   "xmindResource": "resources/64ccf46241c262f85587dcd5bff5bb95857b0ae11c1434e5671c28bfcd5dd817.jpg",
+   "orig": "Img/Braemar Hill~1/Image34.jpg",
+   "bytes": 49492,
+   "q": 4
+  },
+  {
+   "name": "route4-10-fork-up-1",
+   "xmindResource": "resources/249b3da5655e4f6195ab84a11f98725fa14509c23b810e002d2e2d01cbfb5634.jpg",
+   "orig": "Img/MVIMG_20260924_172806.jpg",
+   "bytes": 268435,
+   "q": 12
+  },
+  {
+   "name": "route4-11-fork-up-2",
+   "xmindResource": "resources/45e02314b42fbc051a659d9b85d7a12a5f7284caf81ca4526f20bd889d98d87c.jpg",
+   "orig": "Img/MVIMG_20260924_173458.jpg",
+   "bytes": 275610,
+   "q": 15
+  },
+  {
+   "name": "route4-12-pavilion",
+   "xmindResource": "resources/051eb02a982f371a243b2b7363aaa5bf65cb418ae3a9db83e90af2a9868c2d54.jpg",
+   "orig": "Img/MVIMG_20260924_172927.jpg",
+   "bytes": 264352,
+   "q": 10
+  },
+  {
+   "name": "route4-13-dirt-path",
+   "xmindResource": "resources/4212e27c70befacaa373e1389737790661b7842ae3e3b18e37996a4245ec8039.jpg",
+   "orig": "Img/MVIMG_20260924_173151.jpg",
+   "bytes": 255939,
+   "q": 15
+  },
+  {
+   "name": "route4-14-keep-right-1",
+   "xmindResource": "resources/66d18da24047cdda7c4d5bfe3ff48e12048e31cb59b4f6d789e0d1bf18381eed.jpg",
+   "orig": "Img/MVIMG_20260924_173243.jpg",
+   "bytes": 256624,
+   "q": 15
+  },
+  {
+   "name": "route4-15-keep-right-2",
+   "xmindResource": "resources/c98b6fa65ca0011d40bb6d4151a7688f8782a9336bdebc8476ae9e7e8e86893c.jpg",
+   "orig": "Img/MVIMG_20260924_173345.jpg",
+   "bytes": 277349,
+   "q": 12
+  },
+  {
+   "name": "route4-16-signboard",
+   "xmindResource": "resources/590cad5eff142490e0e6b33844d073c485845ba34adcc3f173e3c4aacc22e980.jpg",
+   "orig": "Img/IMG_20260924_181614.jpg",
+   "bytes": 287403,
+   "q": 8
+  },
+  {
+   "name": "route4-17-viewpoint",
+   "xmindResource": "resources/0f1e2e3cfb970a75fa471f36a768c42312c9c214980b80eee622e1837afe2fb9.jpg",
+   "orig": "Img/IMG_20260924_180947.jpg",
+   "bytes": 57332,
+   "q": 4
+  },
+  {
+   "name": "pay-wechat-ridecode",
+   "xmindResource": "resources/66d05d5cc6537dbdcfc6e92c2b551a9858e9d4e7d9ce2bb51483b03635a96556.png",
+   "orig": null,
+   "bytes": 5673,
+   "q": null
+  },
+  {
+   "name": "brand-logo",
+   "xmindResource": "resources/79efca004ed60f11773f6e3f68db877c898bcf42021b7e3a507b89cd81ca92ce.png",
+   "orig": null,
+   "bytes": 3677,
+   "q": null
+  }
+ ],
+ "video": {
+  "name": "route-to-peak-observatory.mp4",
+  "bytes": 15204695,
+  "crf": 33,
+  "fps": 30,
+  "source": "Video/Route to Victoria Peak Observatory.mp4",
+  "sourceBytes": 79445792
+ },
+ "totalBytes": 19972439
+}
