@@ -1,6 +1,9 @@
 # 国庆维港烟花路线 · 网页版
 
-一份可以**长期维护**的静态攻略站点。所有内容都在 `content/` 里用 Markdown 写，改完运行一条命令（或直接 push，GitHub Actions 会自动重建）就会更新网页。
+> **线上地址**：https://berserkross.github.io/Victoria-Harbour-Fireworks-Viewing-Route/
+> **仓库地址**：https://github.com/berserkross/Victoria-Harbour-Fireworks-Viewing-Route
+
+一份可以**长期维护**的静态攻略站点。所有内容都在 `content/` 里用 Markdown 写，改完运行一条命令就会更新网页。
 
 > 本页内容依据原始攻略《国庆维港烟花路线》（Markdown / XMind / PDF）整理排版，图源同源。
 
@@ -187,44 +190,55 @@ python -m http.server 8000
 
 ## 五、发布到 GitHub Pages
 
-### 最省事的方式：双击 `发布到GitHub.bat`
+> **当前状态：已上线。**
+> 网页地址：https://berserkross.github.io/Victoria-Harbour-Fireworks-Viewing-Route/
+>
+> Pages 的 Source 是 **Deploy from a branch → main / (root)**，即直接发布仓库根目录里的
+> `index.html`。因此**改完内容后，先在本地跑一次 `node build.mjs`，再上传**，线上才会更新。
+
+### 上传：双击 `发布到GitHub.bat`
 
 双击后会**自动选择**上传方式：
 
 | 情况 | 走哪条路 | 会做什么 |
 | --- | --- | --- |
-| 找到令牌文件（`E:\dsh-token.txt` 或本目录 `.token.txt`） | **方式 A**：GitHub API | 调用 `upload.mjs` 上传，并**顺便开启 GitHub Pages** |
+| 找到令牌文件（`E:\dsh-token.txt` 或本目录 `.token.txt`） | **方式 A**：GitHub API | 调用 `upload.mjs` 上传 |
 | 没找到令牌 | **方式 B**：`git push` | 弹出浏览器让你登录 GitHub 授权后推送 |
-
-成功后网页地址是：
-
-```
-https://berserkross.github.io/Victoria-Harbour-Fireworks-Viewing-Route/
-```
-
-> **方式 A 的令牌怎么来？**
-> 打开 https://github.com/settings/personal-access-tokens/new
-> → Repository access 选 **Only select repositories** → 选中本仓库
-> → Permissions → Repository permissions → **Contents** 设为 **Read and write**
-> → Generate token → 把生成的一行字符存到 `E:\dsh-token.txt`。
-> 该文件已在 `.gitignore` 中排除，不会被提交。
 
 ### 手动上传（等价于方式 A）
 
 ```bash
-node upload.mjs --dry-run          # 先看会传哪些文件
-node upload.mjs --with-pages       # 上传并开启 Pages
+node build.mjs                     # 1. 先把 content/*.md 编译成 index.html
+node upload.mjs --dry-run          # 2. 看看会传哪些文件
+node upload.mjs                    # 3. 上传
 ```
 
 `upload.mjs` 用 Node 自带的 `fetch` 直连 GitHub REST API（Git Data API：blob → tree → commit → 更新分支），
-**不需要 git，也不需要联网权限之外的任何东西**。任何 Node 18+ 的环境都能跑。
+**不需要 git**。任何 Node 18+ 的环境都能跑。
 
-### 自动构建
+### 令牌权限说明（重要）
 
-仓库里带了 `.github/workflows/pages.yml`：每次 push 后，Actions 会先跑 `node build.mjs` 重建 `index.html` 再发布——所以**即使忘了在本地构建，线上也会是最新的**。
+细粒度令牌需要 **Contents: Read and write**。另外有两个可选项：
 
-> 如果你更希望线上完全按本地 `index.html` 原样发布，可以删掉 `.github/workflows/pages.yml`，
-> 并到 **Settings → Pages** 把 Source 改成 **Deploy from a branch**，Pages 就会直接发布仓库里的 `index.html`。
+| 权限 | 加不加的差别 |
+| --- | --- |
+| **Contents: Read and write** | **必须**。没有它完全无法上传。 |
+| **Workflows: Read and write** | 可选。加了才能提交 `.github/workflows/` 下的文件。没加时 `upload.mjs` 会自动跳过该目录并提示，**不影响网页发布**。 |
+| **Pages: Read and write** | 可选。只在你想用本脚本自动开关 Pages 时需要；Pages 已配置好，平时用不到。 |
+
+令牌存放位置：`E:\dsh-token.txt`（一行，只放令牌本身）。该路径已列在 `.gitignore` 中，不会被提交。
+
+### 关于「push 后自动重建」
+
+仓库里带了 `.github/workflows/pages.yml`。但因为当前令牌没有 **Workflows** 权限，
+这个文件**还没有被推上去**。想让「改完 md 直接 push，线上自动重建」生效，需要二选一：
+
+- **方案一**：给令牌补上 **Workflows: Read and write**，然后重新运行 `node upload.mjs`；
+- **方案二**：在 GitHub 网页上手动新建 `.github/workflows/pages.yml`，把本地的内容粘进去。
+
+推上去之后，还要到 **Settings → Pages** 把 Source 从 `Deploy from a branch` 改成 **GitHub Actions**。
+
+不加也完全没问题——只是每次改完内容，记得**本地先 `node build.mjs` 再上传**。
 
 ---
 
