@@ -20,12 +20,12 @@
 
   function collect() {
     items = Array.prototype.slice
-      .call(doc.querySelectorAll('.step__figure img, .inline-img, .video img'))
+      .call(doc.querySelectorAll('.step__figure img, .work img, .inline-img'))
       .filter(function (im) {
         return im.naturalWidth !== 0 || im.complete;
       });
     if (!items.length) {
-      items = Array.prototype.slice.call(doc.querySelectorAll('.step__figure img, .inline-img'));
+      items = Array.prototype.slice.call(doc.querySelectorAll('.step__figure img, .work img, .inline-img'));
     }
   }
 
@@ -70,7 +70,7 @@
   }
 
   doc.addEventListener('click', function (e) {
-    var img = e.target.closest && e.target.closest('.step__figure img, .inline-img');
+    var img = e.target.closest && e.target.closest('.step__figure img, .work img, .inline-img');
     if (!img) return;
     e.preventDefault();
     open(img);

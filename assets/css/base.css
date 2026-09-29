@@ -1,49 +1,55 @@
 /* =============================================================
    base.css — 设计变量 + 基础排版
-   想换配色，只改下面 :root 里的变量即可。
+   视觉基调：云海纸刊。白底、墨字、海蓝为点缀，暖色只用于实拍图与极少量强调。
+   换肤只需改下面 :root 里的变量。
    ============================================================= */
 
 :root {
-  /* 底色：维港夜景 */
-  --bg:          #070a12;
-  --bg-soft:     #0b1020;
-  --surface:     #101728;
-  --surface-2:   #16203a;
-  --line:        #22304f;
-  --line-soft:   #1a2540;
+  /* —— 底色：云与纸 —— */
+  --paper:       #ffffff;   /* 卡片／纸面 */
+  --paper-2:     #f7f8fa;   /* 页面底 */
+  --paper-3:     #eef2f8;   /* 浅色区块 */
+  --sky:         #dce9f8;   /* 云海淡蓝 */
+  --sky-deep:    #c3d8f0;
+  --line:        #e3e8f0;   /* 发丝线 */
+  --line-strong: #cfd7e3;
 
-  /* 文字 */
-  --fg:          #e8edf7;
-  --fg-muted:    #9fb0cd;
-  --fg-dim:      #6b7c9c;
+  /* —— 文字：墨 —— */
+  --ink:         #101720;   /* 标题 */
+  --ink-2:       #34404f;   /* 正文 */
+  --ink-3:       #6b7889;   /* 次要 */
+  --ink-4:       #97a2b2;   /* 极淡标注 */
 
-  /* 主题色：烟花金 + 汇演红 */
-  --gold:        #ffc861;
-  --gold-deep:   #f0a92c;
-  --red:         #ff5f6d;
-  --rose:        #ff8fa3;
-  --cyan:        #62d8ff;
-  --green:       #45d6a3;
+  /* —— 海洋影像厂品牌色（取自官方海报与 Logo）—— */
+  --ocean:       #1b4a8a;
+  --ocean-deep:  #143a6e;
+  --ocean-soft:  #e8f0fb;
+  --ocean-line:  rgba(27, 74, 138, .18);
 
-  /* 语义色：给 .meta--paid / .meta--warn / .meta--free 这类修饰类用的语义别名。
-     若你想让「路线一」整体换成别的颜色，改这三个变量即可。 */
-  --paid:        var(--gold);
-  --warn:        var(--red);
-  --free:        var(--green);
+  /* —— 暖色：仅用于实拍图与少量强调，不铺满 —— */
+  --sunset:      #c9622a;
+  --sunset-soft: #fdf1e8;
+  --gold:        #b98a2e;
 
-  /* 排版 */
-  --font-sans: "PingFang SC", "HarmonyOS Sans SC", "Microsoft YaHei", "Source Han Sans SC",
-               "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-num:  "DIN Alternate", "Bahnschrift", "Segoe UI Variable", ui-monospace, monospace;
+  /* 语义色：路线标签 */
+  --tone-paid:   var(--sunset);
+  --tone-warn:   #b8452f;
+  --tone-free:   #2c7a63;
 
-  /* 尺寸 */
-  --wrap:       1240px;
-  --toc-w:      274px;
-  --radius:     16px;
-  --radius-sm:  10px;
-  --shadow:     0 18px 44px -22px rgba(0, 0, 0, .85);
-  --shadow-sm:  0 8px 22px -14px rgba(0, 0, 0, .8);
-  --ring:       0 0 0 3px rgba(255, 200, 97, .35);
+  /* —— 排版 —— */
+  --font-sans: "PingFang SC", "HarmonyOS Sans SC", "Source Han Sans SC", "Noto Sans SC",
+               "Microsoft YaHei", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: "Songti SC", "Source Han Serif SC", "Noto Serif SC", Georgia, "Times New Roman", serif;
+  --font-num:  "DIN Alternate", "Bahnschrift", "Helvetica Neue", Arial, sans-serif;
+
+  /* —— 尺寸 —— */
+  --wrap:       1200px;
+  --toc-w:      246px;
+  --radius:     4px;         /* 刊物感：小圆角 */
+  --radius-lg:  8px;
+  --shadow:     0 1px 2px rgba(16, 23, 32, .04), 0 12px 32px -18px rgba(16, 23, 32, .18);
+  --shadow-sm:  0 1px 2px rgba(16, 23, 32, .05);
+  --ring:       0 0 0 3px rgba(27, 74, 138, .22);
 }
 
 *,
@@ -52,7 +58,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 96px;
+  scroll-padding-top: 88px;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -63,93 +69,80 @@ html {
 
 body {
   margin: 0;
-  background: var(--bg);
-  color: var(--fg);
+  background: var(--paper-2);
+  color: var(--ink-2);
   font-family: var(--font-sans);
-  font-size: 16.5px;
-  line-height: 1.78;
+  font-size: 17px;
+  line-height: 1.85;
   letter-spacing: .01em;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-/* 夜景氛围：顶部霞光 + 极细网格 */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  background:
-    radial-gradient(1100px 620px at 12% -12%, rgba(255, 95, 109, .17), transparent 62%),
-    radial-gradient(900px 560px at 88% -6%, rgba(255, 200, 97, .15), transparent 60%),
-    radial-gradient(1200px 700px at 50% 108%, rgba(98, 216, 255, .09), transparent 65%),
-    linear-gradient(180deg, #070a12 0%, #080d1a 42%, #060911 100%);
-}
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  opacity: .35;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, .022) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, .022) 1px, transparent 1px);
-  background-size: 64px 64px, 64px 64px;
-  mask-image: radial-gradient(ellipse 100% 68% at 50% 0%, #000 20%, transparent 78%);
-}
-
 img, video { max-width: 100%; height: auto; display: block; }
-a { color: var(--gold); text-decoration: none; }
-a:hover { color: var(--gold-deep); }
+
+a { color: var(--ocean); text-decoration: none; }
+a:hover { color: var(--ocean-deep); text-decoration: underline; text-underline-offset: 3px; }
+
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
 summary:focus-visible {
   outline: none;
   box-shadow: var(--ring);
-  border-radius: 6px;
+  border-radius: 3px;
 }
 
 h1, h2, h3, h4 {
-  line-height: 1.32;
+  color: var(--ink);
   margin: 0 0 .6em;
-  font-weight: 700;
-  letter-spacing: .01em;
+  font-weight: 600;
+  letter-spacing: -.01em;
+  line-height: 1.35;
 }
-p { margin: 0 0 1.05em; }
-ul, ol { margin: 0 0 1.05em; }
+p { margin: 0 0 1.1em; }
+ul, ol { margin: 0 0 1.1em; }
+
+strong { color: var(--ink); font-weight: 600; }
 
 code {
   font-family: var(--font-num);
-  font-size: .92em;
-  background: var(--surface-2);
-  border: 1px solid var(--line-soft);
-  border-radius: 6px;
-  padding: .1em .45em;
-  color: var(--gold);
+  font-size: .9em;
+  background: var(--ocean-soft);
+  border-radius: 3px;
+  padding: .12em .42em;
+  color: var(--ocean-deep);
 }
 
 hr {
   border: 0;
   height: 1px;
-  margin: 2.4em 0;
-  background: linear-gradient(90deg, transparent, var(--line), transparent);
+  margin: 2.6em 0;
+  background: var(--line);
 }
 
-::selection { background: rgba(255, 200, 97, .3); color: #fff; }
+::selection { background: var(--sky); color: var(--ink); }
 
-/* 滚动条 */
-* { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
-*::-webkit-scrollbar { width: 10px; height: 10px; }
+* { scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
+*::-webkit-scrollbar { width: 9px; height: 9px; }
 *::-webkit-scrollbar-thumb {
-  background: var(--line);
+  background: var(--line-strong);
   border-radius: 99px;
   border: 3px solid transparent;
   background-clip: padding-box;
 }
-*::-webkit-scrollbar-thumb:hover { background: #33456c; background-clip: padding-box; }
+*::-webkit-scrollbar-thumb:hover { background: var(--ink-4); background-clip: padding-box; }
+
+/* 小标签：英文大写字距标签，刊物常用 */
+.eyebrow {
+  font-family: var(--font-num);
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ocean);
+}
 
 .skip-link {
   position: absolute;
@@ -157,9 +150,9 @@ hr {
   top: 0;
   z-index: 200;
   padding: .7em 1.2em;
-  background: var(--gold);
-  color: #101010;
-  font-weight: 700;
-  border-radius: 0 0 10px 0;
+  background: var(--ocean);
+  color: #fff;
+  font-weight: 600;
+  border-radius: 0 0 6px 0;
 }
 .skip-link:focus { left: 0; }

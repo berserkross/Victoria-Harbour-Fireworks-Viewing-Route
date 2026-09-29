@@ -191,6 +191,42 @@
    "orig": null,
    "bytes": 3677,
    "q": null
+  },
+  {
+   "name": "brand-hoceania-logo",
+   "source": "Hoceania海报\\[2K][Logo]Harmonia Oceania Studio_rounded.png",
+   "bytes": 14729,
+   "note": "品牌／封面素材"
+  },
+  {
+   "name": "brand-hoceania-mark",
+   "source": "Hoceania海报\\[2K][Logo&Character]Harmonia Oceania Studio_rounded.png",
+   "bytes": 102784,
+   "note": "品牌／封面素材"
+  },
+  {
+   "name": "hero-cover",
+   "source": "National Day Fireworks\\Img\\IMG_20260924_181000.jpg",
+   "bytes": 50193,
+   "note": "品牌／封面素材"
+  },
+  {
+   "name": "hero-cover-1600",
+   "source": "National Day Fireworks\\Img\\IMG_20260924_181000.jpg",
+   "bytes": 23605,
+   "note": "品牌／封面素材"
+  },
+  {
+   "name": "hero-cover-900",
+   "source": "National Day Fireworks\\Img\\IMG_20260924_181000.jpg",
+   "bytes": 8947,
+   "note": "品牌／封面素材"
+  },
+  {
+   "name": "og-cover",
+   "source": "National Day Fireworks\\Img\\IMG_20260924_181000.jpg",
+   "bytes": 14335,
+   "note": "品牌／封面素材"
   }
  ],
  "video": {
@@ -201,5 +237,43 @@
   "source": "Video/Route to Victoria Peak Observatory.mp4",
   "sourceBytes": 79445792
  },
- "totalBytes": 19972439
+ "totalBytes": 19972439,
+ "brand": [
+  {
+   "name": "brand-hoceania-logo",
+   "source": "Hoceania海报\\[2K][Logo]Harmonia Oceania Studio_rounded.png",
+   "bytes": 14729,
+   "width": 512
+  },
+  {
+   "name": "brand-hoceania-mark",
+   "source": "Hoceania海报\\[2K][Logo&Character]Harmonia Oceania Studio_rounded.png",
+   "bytes": 102784,
+   "width": 512
+  },
+  {
+   "name": "hero-cover",
+   "source": "National Day Fireworks\\Img\\IMG_20260924_181000.jpg",
+   "bytes": 50193,
+   "width": 2400
+  },
+  {
+   "name": "hero-cover-1600",
+   "source": "National Day Fireworks\\Img\\IMG_20260924_181000.jpg",
+   "bytes": 23605,
+   "width": 1600
+  },
+  {
+   "name": "hero-cover-900",
+   "source": "National Day Fireworks\\Img\\IMG_20260924_181000.jpg",
+   "bytes": 8947,
+   "width": 900
+  },
+  {
+   "name": "og-cover",
+   "source": "National Day Fireworks\\Img\\IMG_20260924_181000.jpg",
+   "bytes": 14335,
+   "width": 1200
+  }
+ ]
 }

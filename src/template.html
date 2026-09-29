@@ -3,34 +3,41 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>{{TITLE}}</title>
+<title>{{TITLE}} · {{BRAND_ORG}}</title>
 <meta name="description" content="{{DESCRIPTION}}">
 <meta name="keywords" content="{{KEYWORDS}}">
 <meta name="author" content="{{AUTHOR}}">
-<meta name="color-scheme" content="dark">
-<meta name="theme-color" content="#0a0d18">
-<link rel="icon" href="assets/img/brand-logo.jpg">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#f7f8fa">
+<link rel="icon" href="{{BRAND_LOGO}}">
+<link rel="apple-touch-icon" href="{{BRAND_LOGO}}">
+
+<!-- Open Graph / 分享卡片 -->
 <meta property="og:type" content="article">
-<meta property="og:title" content="{{TITLE}}">
+<meta property="og:title" content="{{TITLE}} · {{BRAND_ORG}} {{BRAND_ORG_EN}}">
 <meta property="og:description" content="{{DESCRIPTION}}">
-<meta property="og:image" content="assets/img/route1-klook-ticket.jpg">
+<meta property="og:image" content="{{OG_IMAGE}}">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="{{OG_IMAGE}}">
+
 <link rel="stylesheet" href="assets/css/base.css">
 <link rel="stylesheet" href="assets/css/layout.css">
 <link rel="stylesheet" href="assets/css/components.css">
 <link rel="stylesheet" href="assets/css/sections.css">
-<!-- 由 build.mjs 生成，请勿直接编辑本文件：改内容请编辑 content/*.md，改结构请编辑 src/template.html -->
+<!-- 由 build.mjs 生成，请勿直接编辑本文件：改内容请编辑 content/*.md，改结构请编辑 src/template.html，改品牌信息请编辑 site.config.json -->
 </head>
 <body>
 
 <a class="skip-link" href="#main">跳到正文</a>
 
-<header class="topbar">
+<header class="topbar" id="topbar">
   <div class="topbar__inner">
     <a class="brand" href="#top">
-      <span class="brand__mark" aria-hidden="true"></span>
+      <img class="brand__logo" src="{{BRAND_LOGO}}" alt="{{BRAND_ORG}} {{BRAND_ORG_EN}}" width="34" height="34">
       <span class="brand__text">
-        <strong>{{TITLE}}</strong>
-        <small>{{SUBTITLE}}</small>
+        <strong>{{BRAND_ORG}}</strong>
+        <small>{{BRAND_ORG_EN}} · {{BRAND_TAGLINE}}</small>
       </span>
     </a>
     <nav class="topnav" aria-label="章节导航">{{TOPNAV}}</nav>
@@ -44,42 +51,94 @@
 <div class="shell" id="top">
 
   <aside class="toc" id="toc" aria-label="目录">
-    <p class="toc__title">目录</p>
+    <p class="toc__title">目次 <span>CONTENTS</span></p>
     <ol class="toc__list">
 {{TOC}}
     </ol>
-    <p class="toc__foot">
-      <a href="{{REPO}}" target="_blank" rel="noopener">在 GitHub 查看 / 提交修改 ↗</a>
-    </p>
+    <div class="toc__foot">
+      <p class="toc__foot-label">出品</p>
+      <p class="toc__foot-org">{{BRAND_ORG}} <span>{{BRAND_ORG_EN}}</span></p>
+      <p class="toc__foot-parent">{{BRAND_PARENT}}</p>
+      <p class="toc__foot-links">
+        <a href="{{LINK_ORG}}" target="_blank" rel="noopener">组织页面 ↗</a>
+        <a href="{{LINK_COLLEGE}}" target="_blank" rel="noopener">书院官网 ↗</a>
+      </p>
+    </div>
   </aside>
 
   <main class="main" id="main">
 
+    <!-- ============ 首屏：云海（上） + 实拍（下）============ -->
     <section class="hero">
-      <p class="hero__kicker">{{HERO_KICKER}}</p>
-      <h1 class="hero__title">{{TITLE}}</h1>
-      <p class="hero__lead">{{HERO_LEAD}}</p>
-      <ul class="hero__meta">{{HERO_META}}</ul>
-      <p class="hero__scroll"><span aria-hidden="true">↓</span> 向下滚动开始阅读</p>
+      <div class="hero__sky" aria-hidden="true">
+        <span class="hero__cloud hero__cloud--a"></span>
+        <span class="hero__cloud hero__cloud--b"></span>
+        <span class="hero__cloud hero__cloud--c"></span>
+      </div>
+
+      <div class="hero__inner">
+        <p class="hero__org">
+          {{BRAND_PARENTS}}
+        </p>
+        <p class="hero__kicker">
+          <span class="hero__kicker-cn">{{HERO_KICKER}}</span>
+          <span class="hero__kicker-en">{{HERO_KICKER_EN}}</span>
+        </p>
+        <h1 class="hero__title">{{HERO_TITLE}}</h1>
+        <p class="hero__lead">{{HERO_LEAD}}</p>
+
+        <p class="hero__cta">
+          <a class="btn btn--primary" href="{{CTA_PRIMARY_HREF}}" target="_blank" rel="noopener">{{CTA_PRIMARY_LABEL}}</a>
+          <a class="btn btn--ghost" href="{{CTA_SECONDARY_HREF}}" target="_blank" rel="noopener">{{CTA_SECONDARY_LABEL}}</a>
+        </p>
+      </div>
+
+      <figure class="hero__cover">
+        <img src="{{HERO_COVER}}" srcset="{{HERO_COVER_900}} 900w, {{HERO_COVER_1600}} 1600w, {{HERO_COVER}} 2400w"
+             sizes="(max-width: 720px) 100vw, 1100px" alt="{{HERO_COVER_ALT}}" width="2400" height="1800" fetchpriority="high" decoding="async">
+        <figcaption>{{HERO_COVER_CREDIT}}</figcaption>
+      </figure>
     </section>
+
+    <!-- ============ 数据条 ============ -->
+    <section class="stats" aria-label="内容速览">{{STATS}}</section>
 
 {{SECTIONS}}
 
+    <!-- ============ 页尾 CTA ============ -->
+    <section class="outro">
+      <p class="outro__label">关于我们 <span>ABOUT</span></p>
+      <h2 class="outro__title">{{BRAND_ORG}}</h2>
+      <p class="outro__en">{{BRAND_ORG_EN}} · {{BRAND_TAGLINE}}</p>
+      <p class="outro__desc">{{BRAND_PARENT}}旗下学生摄影组织，{{BRAND_FOUNDED}} 年成立。</p>
+      <p class="outro__cta">
+        <a class="btn btn--primary" href="{{LINK_ORG}}" target="_blank" rel="noopener">组织页面 ↗</a>
+        <a class="btn btn--ghost" href="{{LINK_COLLEGE}}" target="_blank" rel="noopener">书院官网 ↗</a>
+      </p>
+    </section>
+
     <footer class="footer">
       <div class="footer__brand">
-        <img src="assets/img/brand-logo.jpg" alt="{{FOOTER_BRAND}}" width="60" height="60">
-        <div>
-          <p class="footer__cn">{{FOOTER_BRAND}}</p>
-          <p class="footer__en">{{FOOTER_BRAND_EN}}</p>
+        <img src="{{BRAND_LOGO}}" alt="{{BRAND_ORG}} {{BRAND_ORG_EN}}" width="72" height="72">
+        <div class="footer__names">
+          <p class="footer__cn">{{BRAND_ORG}}</p>
+          <p class="footer__en">{{BRAND_ORG_EN}}</p>
+          <p class="footer__parent">{{BRAND_PARENT}}</p>
         </div>
-        <p class="footer__credit">{{FOOTER_CREDIT}}</p>
+        <p class="footer__seal">{{BRAND_PRODUCED_BY}}</p>
       </div>
+
+      <dl class="footer__credit">
+        <div><dt>{{BRAND_CREDIT_EN}}</dt><dd>{{BRAND_CREDIT}}</dd></div>
+        <div><dt>PHOTO CREDIT</dt><dd>{{BRAND_PHOTO_CREDIT}}</dd></div>
+      </dl>
+
       <p class="footer__note">{{FOOTER_NOTE}}</p>
       <p class="footer__disclaimer">{{FOOTER_DISCLAIMER}}</p>
       <p class="footer__meta">
         <a href="{{REPO}}" target="_blank" rel="noopener">GitHub 仓库</a>
         <span>·</span>
-        <span>最后更新：{{BUILD_DATE}}</span>
+        <span>最后更新 {{BUILD_DATE}}</span>
       </p>
     </footer>
 

@@ -2,35 +2,66 @@
   "site": {
     "lang": "zh-CN",
     "title": "国庆维港烟花路线",
-    "subtitle": "2026 香港国庆烟花汇演 · 观赏机位与交通全攻略",
-    "description": "从福田／罗湖口岸出发，四条维港烟花观赏路线、两条实测具体路线（太平山・宝马山）、支付方式与八达通办理指南。",
-    "keywords": ["香港", "国庆烟花", "维港烟花", "太平山", "宝马山", "观赏路线", "攻略"],
-    "author": "祥波书院 · 海洋影像厂",
+    "subtitle": "2026 香港国庆烟花汇演 · 观赏机位与交通攻略",
+    "description": "香港中文大学（深圳）祥波书院海洋影像厂出品：四条维港烟花观赏路线、两条实测具体路线（太平山・宝马山）、支付方式与八达通指南。",
+    "keywords": ["香港", "国庆烟花", "维港烟花", "太平山", "宝马山", "观赏路线", "攻略", "海洋影像厂", "祥波书院"],
+    "author": "海洋影像厂 HOCEANIA",
     "repo": "https://github.com/berserkross/Victoria-Harbour-Fireworks-Viewing-Route"
   },
 
-  "hero": {
-    "kicker": "2026 · 香港国庆烟花汇演",
-    "title": "国庆维港烟花路线",
-    "lead": "四条观赏路线 · 两条实测具体路线 · 支付与八达通指南",
-    "meta": ["太平山观景台 实测走法", "宝马山观景台 实测走法", "含下车后步行视频"]
+  "ogImage": "assets/img/og-cover.jpg",
+
+  "brand": {
+    "org": "海洋影像厂",
+    "orgEn": "HOCEANIA",
+    "parent": "香港中文大学（深圳）· 祥波书院",
+    "parents": ["香港中文大学（深圳）", "祥波书院", "海洋影像厂"],
+    "founded": "2020",
+    "tagline": "行走之间，光影成诗",
+    "producedBy": "出品",
+    "credit": "策划 / 摄影 / 编辑　杨天瑞",
+    "creditEn": "PLANNING / PHOTOGRAPHY / EDITING",
+    "photoCredit": "摄影：杨天瑞",
+    "logo": "assets/img/brand-hoceania-logo.jpg",
+    "links": {
+      "college": "https://harmonia.cuhk.edu.cn/",
+      "org": "https://harmonia.cuhk.edu.cn/page/275"
+    }
   },
 
+  "hero": {
+    "kicker": "2026 香港国庆烟花汇演",
+    "kickerEn": "NATIONAL DAY FIREWORKS · VICTORIA HARBOUR",
+    "title": "国庆维港烟花路线",
+    "lead": "四条观赏路线，两条实测走法。从过关到站位，一步一图。",
+    "cover": "assets/img/hero-cover.jpg",
+    "cover1600": "assets/img/hero-cover-1600.jpg",
+    "cover900": "assets/img/hero-cover-900.jpg",
+    "coverAlt": "太平山俯瞰港岛天际线的日落剪影",
+    "coverCredit": "封面摄影：杨天瑞　太平山 · 2026.09.24",
+    "ctaPrimary": { "label": "了解海洋影像厂", "href": "https://harmonia.cuhk.edu.cn/page/275" },
+    "ctaSecondary": { "label": "祥波书院官网", "href": "https://harmonia.cuhk.edu.cn/" }
+  },
+
+  "stats": [
+    { "num": "4", "unit": "条", "label": "观赏路线" },
+    { "num": "2", "unit": "条", "label": "实测走法" },
+    { "num": "27", "unit": "张", "label": "步骤实拍" },
+    { "num": "2020", "unit": "年", "label": "影像厂成立" }
+  ],
+
   "nav": [
-    { "id": "intro",    "label": "写在前面", "file": "00-intro.md",    "num": "—" },
-    { "id": "routes",   "label": "四条路线", "file": "10-routes.md",   "num": "01" },
-    { "id": "route3",   "label": "具体路线・太平山", "file": "20-route3-peak.md", "num": "02" },
-    { "id": "route4",   "label": "具体路线・宝马山", "file": "30-route4-braemar.md", "num": "03" },
-    { "id": "payment",  "label": "支付方式", "file": "40-payment.md",  "num": "04" },
-    { "id": "octopus",  "label": "八达通",   "file": "50-octopus.md",  "num": "05" },
-    { "id": "checklist","label": "出发前检查清单", "file": "60-checklist.md", "num": "06" }
+    { "id": "intro",     "label": "写在前面", "file": "00-intro.md",     "num": "—",  "en": "INTRO" },
+    { "id": "routes",    "label": "四条路线", "file": "10-routes.md",    "num": "01", "en": "ROUTES" },
+    { "id": "route3",    "label": "具体路线・太平山", "file": "20-route3-peak.md", "num": "02", "en": "THE PEAK" },
+    { "id": "route4",    "label": "具体路线・宝马山", "file": "30-route4-braemar.md", "num": "03", "en": "BRAEMAR HILL" },
+    { "id": "payment",   "label": "支付方式", "file": "40-payment.md",   "num": "04", "en": "PAYMENT" },
+    { "id": "octopus",   "label": "八达通",   "file": "50-octopus.md",   "num": "05", "en": "OCTOPUS" },
+    { "id": "checklist", "label": "出发前检查清单", "file": "60-checklist.md", "num": "06", "en": "CHECKLIST" }
   ],
 
   "footer": {
-    "brand": "祥波书院 · 海洋影像厂",
-    "brandEn": "XIANGBO COLLEGE · OCEAN IMAGE STUDIO",
-    "credit": "出品",
-    "note": "本页内容依据原始攻略《国庆维港烟花路线》（Markdown / XMind / PDF）整理排版，图源同源。",
+    "note": "本页内容依据海洋影像厂原始攻略《国庆维港烟花路线》（Markdown / XMind / PDF）整理排版，图源同源。",
     "disclaimer": "路线信息具有时效性：烟花汇演安排、巴士／小巴班次与票价、商场入场安排均可能变动，出行前请以官方最新公告为准。"
   }
 }

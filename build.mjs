@@ -172,7 +172,10 @@ ${rows ? `<dl class="card__rows">\n${rows}\n</dl>` : ''}
 }
 
 function renderSteps(lines) {
-  const items = parseItems(lines);
+  const all = parseItems(lines);
+  // 块首的 `- credit: ...` 是整组图的摄影署名，不是一步
+  const photoCredit = (all.find((x) => x.credit && !x.title) ?? {}).credit ?? '';
+  const items = all.filter((x) => x.title);
   let counter = 0;
   const html = items.map((p) => {
     counter += 1;
@@ -193,7 +196,8 @@ ${img}
 </div>
 </li>`;
   });
-  return `<ol class="steps">\n${html.join('\n')}\n</ol>`;
+  const credit = photoCredit ? `<p class="steps__credit">${inline(photoCredit)}</p>` : '';
+  return `<ol class="steps">\n${html.join('\n')}\n</ol>${credit}`;
 }
 
 function renderVideo(p) {
@@ -296,6 +300,7 @@ function renderList(lines) {
 function renderMarkdown(src, opts = {}) {
   const lines = String(src).replace(/\r\n?/g, '\n').split('\n');
   const used = opts.used ?? new Set();
+  const offsetLevel = opts.headingOffset ?? 0;
   const headings = [];
   const out = [];
   let i = 0;
@@ -335,10 +340,18 @@ function renderMarkdown(src, opts = {}) {
     const h = /^(#{1,6})\s+(.*?)\s*$/.exec(line);
     if (h) {
       flushParagraph(para);
-      const level = h[1].length;
+      const srcLevel = h[1].length;
       const text = h[2];
+      // headingOffset=1 时：Markdown 的 h1 是章节标题（交给模板渲染），
+      // h2 仍输出为 h2，以此类推 —— 即正文层级不变，只是把 h1 抽走。
+      const level = srcLevel;
+      if (srcLevel <= offsetLevel) {
+        i += 1;
+        continue; // 章节标题由模板渲染，跳过
+      }
       const id = slug(text, used);
-      headings.push({ level, text, id });
+      // headings 里记录「源码层级」，供调用方识别 h1；输出时才应用下移
+      headings.push({ level: srcLevel, text, id });
       out.push(`<h${level} id="${id}"><a class="anchor" href="#${id}" aria-label="本节链接">#</a>${inline(text)}</h${level}>`);
       i += 1;
       continue;
@@ -372,7 +385,7 @@ function renderMarkdown(src, opts = {}) {
         buf.push(lines[i].replace(/^>\s?/, ''));
         i += 1;
       }
-      out.push(`<blockquote class="quote">${renderMarkdown(buf.join('\n'), { used }).html}</blockquote>`);
+      out.push(`<blockquote class="quote">${renderMarkdown(buf.join('\n'), { used, headingOffset: offsetLevel }).html}</blockquote>`);
       continue;
     }
 
@@ -404,6 +417,19 @@ function renderMarkdown(src, opts = {}) {
 <thead><tr>${head.map((c) => `<th>${inline(c)}</th>`).join('')}</tr></thead>
 <tbody>${rows.map((r) => `<tr>${r.map((c) => `<td>${inline(c)}</td>`).join('')}</tr>`).join('')}</tbody>
 </table></div>`);
+      continue;
+    }
+
+    // ---- 图片独占一行 → 带图注的作品图 ----
+    const imgLine = /^!\[([^\]]*)\]\(\s*([^)\s]+)(?:\s+"([^"]*)")?\s*\)$/.exec(line.trim());
+    if (imgLine) {
+      flushParagraph(para);
+      const [, alt, src2, cap] = imgLine;
+      out.push(`<figure class="work">
+<img src="${escapeHtml(safeUrl(src2))}" alt="${escapeHtml(alt)}" loading="lazy" decoding="async">
+${cap ? `<figcaption>${inline(cap)}</figcaption>` : ''}
+</figure>`);
+      i += 1;
       continue;
     }
 
@@ -440,24 +466,31 @@ function main() {
       continue;
     }
     const raw = readFileSync(file, 'utf8');
-    const { html, headings } = renderMarkdown(raw, { used: usedIds });
+    // 把 Markdown 的 h1 当作章节标题（由模板渲染），正文里的 h2/h3 下移一级，
+    // 保证最终页面只有一个 h1，标题层级连续。
+    const { html, headings } = renderMarkdown(raw, { used: usedIds, headingOffset: 1 });
 
-    // 首个 h1 作为章节标题，其余标题进目录
     const h1 = headings.find((h) => h.level === 1);
     const title = h1 ? h1.text : item.label;
     const id = item.id;
+
+    const children = headings.filter((h) => h.level >= 2 && h.level <= 3);
 
     toc.push({
       id,
       num: item.num ?? '',
       label: item.label,
-      children: headings.filter((h) => h.level >= 2 && h.level <= 3).map((h) => ({ id: h.id, text: h.text, level: h.level })),
+      en: item.en ?? '',
+      children: children.map((h) => ({ id: h.id, text: h.text, level: h.level })),
     });
 
     sections.push(`<section class="section" id="${id}" data-section="${id}">
 <header class="section__head">
-${item.num ? `<span class="section__num">${escapeHtml(item.num)}</span>` : ''}
-<h2 class="section__title">${inline(title)}</h2>
+<span class="section__num">${escapeHtml(item.num ?? '')}</span>
+<div class="section__titles">
+${item.en ? `<p class="section__en">${escapeHtml(item.en)}</p>` : ''}
+<h1 class="section__title" id="${id}-title">${inline(title)}</h1>
+</div>
 </header>
 <div class="section__body">
 ${html}
@@ -475,20 +508,30 @@ ${html}
         : '';
       return `<li class="toc__item">
 <a class="toc__link" href="#${t.id}"${t.children.length ? ' data-has-sub="1"' : ''}>
-${t.num ? `<span class="toc__num">${escapeHtml(t.num)}</span>` : ''}<span class="toc__label">${escapeHtml(t.label)}</span>
+${t.num ? `<span class="toc__num">${escapeHtml(t.num)}</span>` : ''}<span class="toc__label">${escapeHtml(t.label)}</span>${t.en ? `<span class="toc__en">${escapeHtml(t.en)}</span>` : ''}
 </a>${kids}
 </li>`;
     })
     .join('\n');
 
   const topnavHtml = toc
-    .map((t) => `<a href="#${t.id}">${t.num ? `<i>${escapeHtml(t.num)}</i>` : ''}${escapeHtml(t.label)}</a>`)
+    .map((t) => `<a href="#${t.id}"><i>${escapeHtml(t.num ?? '')}</i>${escapeHtml(t.label)}</a>`)
     .join('');
 
-  const heroMeta = (cfg.hero.meta ?? []).map((m) => `<li>${escapeHtml(m)}</li>`).join('');
+  // ---- 数据条 ----
+  const statsHtml = (cfg.stats ?? [])
+    .map((s) => `<div class="stat">
+<span class="stat__num">${escapeHtml(s.num)}<i>${escapeHtml(s.unit ?? '')}</i></span>
+<span class="stat__label">${escapeHtml(s.label)}</span>
+</div>`)
+    .join('\n');
 
   const now = new Date();
   const buildDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+  const b = cfg.brand ?? {};
+  const h = cfg.hero ?? {};
+  const link = b.links ?? {};
 
   const vars = {
     LANG: cfg.site.lang ?? 'zh-CN',
@@ -498,15 +541,43 @@ ${t.num ? `<span class="toc__num">${escapeHtml(t.num)}</span>` : ''}<span class=
     KEYWORDS: (cfg.site.keywords ?? []).join(','),
     AUTHOR: cfg.site.author,
     REPO: cfg.site.repo,
-    HERO_KICKER: cfg.hero.kicker,
-    HERO_LEAD: cfg.hero.lead,
-    HERO_META: heroMeta,
+
+    // 品牌
+    BRAND_ORG: b.org ?? '',
+    BRAND_ORG_EN: b.orgEn ?? '',
+    BRAND_PARENT: b.parent ?? '',
+    BRAND_PARENTS: (b.parents ?? []).map((x) => `<span>${escapeHtml(x)}</span>`).join('<i aria-hidden="true">·</i>'),
+    BRAND_FOUNDED: b.founded ?? '',
+    BRAND_TAGLINE: b.tagline ?? '',
+    BRAND_PRODUCED_BY: b.producedBy ?? '',
+    BRAND_CREDIT: b.credit ?? '',
+    BRAND_CREDIT_EN: b.creditEn ?? '',
+    BRAND_PHOTO_CREDIT: b.photoCredit ?? '',
+    BRAND_LOGO: b.logo ?? '',
+    LINK_COLLEGE: link.college ?? '#',
+    LINK_ORG: link.org ?? '#',
+
+    // 首屏
+    HERO_KICKER: h.kicker ?? '',
+    HERO_KICKER_EN: h.kickerEn ?? '',
+    HERO_TITLE: h.title ?? cfg.site.title,
+    HERO_LEAD: h.lead ?? '',
+    HERO_COVER: h.cover ?? '',
+    HERO_COVER_1600: h.cover1600 ?? h.cover ?? '',
+    HERO_COVER_900: h.cover900 ?? h.cover ?? '',
+    HERO_COVER_ALT: h.coverAlt ?? '',
+    HERO_COVER_CREDIT: h.coverCredit ?? '',
+    CTA_PRIMARY_LABEL: h.ctaPrimary?.label ?? '',
+    CTA_PRIMARY_HREF: h.ctaPrimary?.href ?? '#',
+    CTA_SECONDARY_LABEL: h.ctaSecondary?.label ?? '',
+    CTA_SECONDARY_HREF: h.ctaSecondary?.href ?? '#',
+    OG_IMAGE: cfg.ogImage ?? 'assets/img/og-cover.jpg',
+
+    STATS: statsHtml,
     TOC: tocHtml,
     TOPNAV: topnavHtml,
     SECTIONS: sections.join('\n\n'),
-    FOOTER_BRAND: cfg.footer.brand,
-    FOOTER_BRAND_EN: cfg.footer.brandEn,
-    FOOTER_CREDIT: cfg.footer.credit,
+
     FOOTER_NOTE: cfg.footer.note,
     FOOTER_DISCLAIMER: cfg.footer.disclaimer,
     BUILD_DATE: buildDate,

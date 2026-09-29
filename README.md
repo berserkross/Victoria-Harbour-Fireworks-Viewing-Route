@@ -2,10 +2,11 @@
 
 > **线上地址**：https://berserkross.github.io/Victoria-Harbour-Fireworks-Viewing-Route/
 > **仓库地址**：https://github.com/berserkross/Victoria-Harbour-Fireworks-Viewing-Route
+> **出品**：香港中文大学（深圳）· 祥波书院 · 海洋影像厂 HOCEANIA
 
 一份可以**长期维护**的静态攻略站点。所有内容都在 `content/` 里用 Markdown 写，改完运行一条命令就会更新网页。
 
-> 本页内容依据原始攻略《国庆维港烟花路线》（Markdown / XMind / PDF）整理排版，图源同源。
+> 本页内容依据海洋影像厂原始攻略《国庆维港烟花路线》（Markdown / XMind / PDF）整理排版，图源同源。
 
 ---
 
@@ -15,8 +16,8 @@
 .
 ├── index.html              ← 生成物，请勿手改（每次构建都会覆盖）
 ├── build.mjs               ← 构建脚本：Markdown + 模板 → index.html（零依赖）
-├── upload.mjs              ← 上传脚本：走 GitHub REST API 推送并开启 Pages
-├── site.config.json        ← 站点设置：标题、导航、页脚、仓库地址
+├── upload.mjs              ← 上传脚本：走 GitHub REST API 推送
+├── site.config.json        ← ★ 站点与品牌设置：标题、导航、数据条、署名、CTA、页脚
 ├── content/                ← ★ 日常改文案只改这里
 │   ├── 00-intro.md              写在前面
 │   ├── 10-routes.md             四条路线
@@ -26,30 +27,63 @@
 │   ├── 50-octopus.md            关于八达通
 │   └── 60-checklist.md          出发前检查清单
 ├── src/
-│   ├── template.html       ← 页面骨架（HTML 结构）
+│   ├── template.html       ← 页面骨架（含首屏云海、数据条、关于我们、页脚）
 │   ├── css/
-│   │   ├── base.css              配色变量 + 基础排版
+│   │   ├── base.css              配色变量 + 排版
 │   │   ├── layout.css            顶栏 / 目录 / 栅格 / 响应式
-│   │   ├── components.css        卡片 / 步骤 / 提示 / 清单 / 视频 / 灯箱
-│   │   └── sections.css          首屏 / 章节 / 页脚
+│   │   ├── components.css        按钮 / 卡片 / 步骤 / 清单 / 视频 / 灯箱
+│   │   └── sections.css          首屏 / 数据条 / 章节 / 关于我们 / 页脚
 │   └── js/
 │       ├── toc.js                目录高亮 + 阅读进度 + 手机抽屉
 │       ├── lightbox.js           点击图片放大
 │       └── checklist.js          清单勾选 + 本地保存
 ├── assets/                 ← 网页实际引用的资源（构建时从 src/ 同步 css/js）
-│   ├── img/                      27 张图 + 1 个 Logo，最长边 1920px，单张 ≤ 300 KB
+│   ├── img/                      27 张步骤图 + 官方 Logo + 封面多尺寸，单张 ≤ 300 KB
+│   │   ├── hero-cover*.jpg             首屏封面（2400/1600/900 三档）
+│   │   ├── brand-hoceania-logo.jpg     HOCEANIA 官方 Logo
+│   │   └── og-cover.jpg                社交分享缩略图（og:image）
 │   ├── video/route-to-peak-observatory.mp4   720p，约 14.5 MB
-│   └── manifest.json             资源清单：每张图的来源文件与体积
+│   └── manifest.json             资源清单：每张图的来源与体积
 ├── source/                 ← 原始攻略存档（只读参考）
 ├── 预览网页.bat             ← 双击即可在浏览器查看网页
 ├── 发布到GitHub.bat         ← 双击即可把网页上传到 GitHub
-├── .github/workflows/pages.yml   push 后自动构建并发布到 GitHub Pages
 └── .nojekyll               ← 让 Pages 按原样发布，不做 Jekyll 处理
 ```
 
 ---
 
-## 二、怎么改内容
+## 二、视觉与文案基调
+
+**设计基调：云海纸刊。** 呼应海洋影像厂官方海报的云海／水面主视觉——白底、墨字、海蓝点缀，暖色只留在实拍图与少量强调上。
+
+| 元素 | 做法 |
+| --- | --- |
+| 首屏 | 上半部 CSS 绘制的云海（呼应海报）+ 下半部太平山日落实拍（杨天瑞摄），二者拼接 |
+| 品牌落款 | 首屏「香港中文大学（深圳）· 祥波书院 · 海洋影像厂」三标并列，同官方海报 |
+| 色彩 | `--ocean #1b4a8a` 为主色；`--sunset #c9622a` 只用于提示块与"买票"标签 |
+| 字体 | 标题用宋体系（`--font-serif`）体现刊物感；英文标签用等宽大写＋宽字距 |
+| 数据条 | 4 / 2 / 27 / 2020 四个数字，杂志式信息前置 |
+| 署名 | 页脚含「策划 / 摄影 / 编辑　杨天瑞」与 PHOTO CREDIT |
+| CTA | 首屏与页尾各一组：组织页面 + 书院官网 |
+
+### 换配色
+
+只改 `src/css/base.css` 顶部 `:root`：
+
+```css
+--ocean:  #1b4a8a;   /* 品牌海蓝（主色） */
+--ink:    #101720;   /* 标题墨色 */
+--paper:  #ffffff;   /* 纸面 */
+--sunset: #c9622a;   /* 暖色强调 */
+```
+
+### 换品牌信息 / 署名 / CTA
+
+全部集中在 `site.config.json` 的 `brand` 与 `hero` 两节，改完运行 `node build.mjs` 即可，**不需要动 HTML**。
+
+---
+
+## 三、怎么改内容
 
 ### 1. 改文字
 
@@ -95,7 +129,7 @@ node build.mjs
 
 ---
 
-## 三、Markdown 扩展语法
+## 四、Markdown 扩展语法
 
 `content/*.md` 用的是 Markdown，另外加了几个站点专用的代码块。下面的示例都**真实可用**，可以直接复制去改。
 
@@ -114,6 +148,15 @@ node build.mjs
 - `n` 可省略，会自动从 1 开始编号；
 - `img: null` 表示这一步没有配图；
 - 同一段连续的 `steps` 块共用一条时间轴，所以**步骤不要被别的块打断**。
+- 摄影署名**不写在 `steps` 里**，统一放在 `site.config.json` 的 `brand.photoCredit`，只显示一次（页脚）。
+
+### 作品图（带图注的整幅图片）
+
+图片独占一行时，会自动渲染成带图注的作品图——第三个参数就是图注：
+
+```markdown
+![Klook 购票页面](assets/img/route1-klook-ticket.jpg "2026 国庆烟花汇演｜海港城 · 购票页面")
+```
 
 ### 路线标签
 
@@ -173,7 +216,7 @@ group: 证件与钱
 
 ---
 
-## 四、本地预览
+## 五、本地预览
 
 **最快的方式**：直接双击仓库根目录的 **`预览网页.bat`**，浏览器就会打开网页。
 （它只是替你双击 `index.html`——因为引用的是站内相对路径，不搭服务器也能正常显示。）
@@ -188,7 +231,7 @@ python -m http.server 8000
 
 ---
 
-## 五、发布到 GitHub Pages
+## 六、发布到 GitHub Pages
 
 > **当前状态：已上线。**
 > 网页地址：https://berserkross.github.io/Victoria-Harbour-Fireworks-Viewing-Route/
@@ -242,7 +285,7 @@ node upload.mjs                    # 3. 上传
 
 ---
 
-## 六、素材与版权
+## 七、素材与版权
 
 - 图片来源：原始攻略《国庆维港烟花路线》的 XMind 内嵌资源，与 PDF 中嵌入的为同一批图；`assets/manifest.json` 记录了每张图对应的原始文件名与体积。
 - 网页图片统一压缩到最长边 1920px、单张 ≤ 300 KB；视频从 79 MB 的 HEVC 转码为 15 MB 的 H.264 720p 并开启 `faststart`。
