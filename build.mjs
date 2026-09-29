@@ -637,8 +637,7 @@ ${(g.lines ?? []).map((l) => `<li>${inline(l)}</li>`).join('\n')}
 <div class="egg__feed">
 ${e.mascot ? `<img class="egg__mascot" src="${escapeHtml(safeUrl(e.mascot))}" alt="${escapeHtml(e.mascotAlt ?? '')}" width="170" height="170" loading="lazy" decoding="async">` : ''}
 ${e.feed ? `<p class="egg__feed-text">${inline(e.feed)}</p>` : ''}
-${e.payQr ? `<img class="egg__pay" src="${escapeHtml(safeUrl(e.payQr))}" alt="${escapeHtml(e.payAlt ?? '')}" width="200" height="200" loading="lazy" decoding="async">
-${e.payLabel ? `<p class="egg__pay-label">${inline(e.payLabel)}</p>` : ''}` : ''}
+${e.payQr ? `<img class="egg__pay" src="${escapeHtml(safeUrl(e.payQr))}" alt="${escapeHtml(e.payAlt ?? '')}" loading="lazy" decoding="async">` : ''}
 </div>
 </div>
 </details>`;

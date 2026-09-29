@@ -67,12 +67,11 @@
     "enabled": true,
     "hint": "彩蛋",
     "congrats": "🥰 恭喜你发现彩蛋 🎉",
-    "mascot": "assets/img/egg-deepseek.jpg",
+    "mascot": "assets/img/egg-deepseek.png",
     "mascotAlt": "DeepSeek 的鲸鱼娘形象",
-    "feed": "喜欢的话可以喂我吃 token 小蛋糕",
-    "payQr": "assets/img/egg-pay-qr.jpg",
-    "payAlt": "海洋影像厂的微信经营收款码",
-    "payLabel": "海洋的摄影小铺"
+    "feed": "“喜欢的话，可以投喂我 token 小蛋糕😘”",
+    "payQr": "assets/img/egg-pay-qr.png",
+    "payAlt": "海洋影像厂的微信经营收款码"
   },
 
   "nav": [

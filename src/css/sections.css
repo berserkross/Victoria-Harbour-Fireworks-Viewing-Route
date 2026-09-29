@@ -506,38 +506,35 @@ h4:hover > .anchor { opacity: 1; color: var(--ocean); }
 .egg__feed {
   text-align: center;
 }
+/* 鲸鱼娘：原始 PNG 自带透明，直接放，不加任何框、底、投影 */
 .egg__mascot {
   width: 170px;
   height: 170px;
   margin: 0 auto;
-  border-radius: 14px;
-  background: #fff;
-  box-shadow: 0 0 0 1px var(--line);
+  background: none;
+  box-shadow: none;
+  border: 0;
 }
 .egg__feed-text {
-  margin: .9rem 0 1.1rem;
+  margin: .9rem 0 1.6rem;
   font-size: .9rem;
+  font-style: italic;          /* 斜体 */
   color: var(--ink-2);
 }
+/* 经营收款码：用原图整张，不裁不变色；只限宽，高度按比例走 */
 .egg__pay {
-  width: 200px;
-  height: 200px;
+  width: 260px;
+  max-width: 100%;
+  height: auto;
   margin: 0 auto;
+  display: block;
   border-radius: var(--radius);
-  background: #fff;
-  padding: 8px;
-  box-shadow: 0 0 0 1px var(--line);
-}
-.egg__pay-label {
-  margin: .6rem 0 0;
-  font-size: .8rem;
-  color: var(--ink-3);
-  letter-spacing: .04em;
+  box-shadow: 0 8px 24px -14px rgba(0, 0, 0, .7);
 }
 
 @media (max-width: 480px) {
   .egg__mascot { width: 140px; height: 140px; }
-  .egg__pay { width: 176px; height: 176px; }
+  .egg__pay { width: 78%; }
 }
 
 /* ------------------------------------------- 页尾 CTA「关于我们」 */
