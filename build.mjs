@@ -78,7 +78,10 @@ function inline(src) {
   s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
   s = s.replace(/~~([^~]+)~~/g, '<del>$1</del>');
   s = s.replace(/\[([^\]]+)\]\(\s*([^)\s]+)\s*\)/g, (_, t, u) => `<a href="${escapeHtml(safeUrl(u))}" target="_blank" rel="noopener">${t}</a>`);
-  s = s.replace(/&lt;(https?:\/\/[^&\s]+)&gt;/g, (_, u) => `<a href="${escapeHtml(u)}" target="_blank" rel="noopener">${u}</a>`);
+  // 自动链接：<https://…>
+  // 注意字符类不能用 [^&\s]：URL 里常有 %XX（如维基／官网的中文路径），
+  // 排除 & 会误伤含 % 的链接，导致整条链接渲染不出来。这里只排除空白与 >。
+  s = s.replace(/&lt;(https?:\/\/[^\s>]+)&gt;/g, (_, u) => `<a href="${escapeHtml(u)}" target="_blank" rel="noopener">${u}</a>`);
 
   return s.replace(/\u0000(\d+)\u0000/g, (_, i) => stash[Number(i)]);
 }
@@ -304,8 +307,16 @@ function renderList(lines) {
     } else if (top) {
       cur = { text: top[1], sub: [] };
       items.push(cur);
-    } else if (cur && /^\s+\S/.test(raw)) {
-      (cur.sub.length ? cur.sub : [cur]).push(raw.trim());
+    } else if (cur && raw.trim()) {
+      const t = raw.trim();
+      // 缩进的纯链接行（或 <https://…>）拼到上一条上，否则会被丢掉
+      if (/^<?https?:\/\/\S+>?$/.test(t) || /^\[[^\]]+\]\(\S+\)$/.test(t)) {
+        cur.text = cur.text.trimEnd() + ' ' + t;
+      } else if (cur.sub.length) {
+        cur.sub.push(t);
+      } else {
+        cur.text = cur.text.trimEnd() + ' ' + t;
+      }
     }
   }
   const html = items
