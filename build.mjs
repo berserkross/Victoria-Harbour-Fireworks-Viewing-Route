@@ -691,6 +691,9 @@ ${e.payLabel ? `<p class="egg__pay-label">${inline(e.payLabel)}</p>` : ''}` : ''
     EGG: eggHtml,
 
     FOOTER_NOTE: cfg.footer.note,
+    FOOTER_BG_CREDIT: cfg.footer.bgCredit
+      ? `<p class="footer__bg-credit">${inline(cfg.footer.bgCredit)}</p>`
+      : '',
     FOOTER_DISCLAIMER: cfg.footer.disclaimer,
     BUILD_DATE: buildDate,
   };

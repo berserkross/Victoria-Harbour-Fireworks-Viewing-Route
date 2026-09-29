@@ -670,6 +670,13 @@ h4:hover > .anchor { opacity: 1; color: var(--ocean); }
   color: var(--ink-4);
   font-size: .78rem;
 }
+/* 页面背景照片的来源署名（site.config.json 的 footer.bgCredit） */
+.footer__bg-credit {
+  margin: 0 0 .85rem;
+  font-size: .72rem;
+  letter-spacing: .02em;
+  color: var(--ink-4);
+}
 .footer__meta {
   display: flex;
   flex-wrap: wrap;

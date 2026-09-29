@@ -15,9 +15,10 @@
    ============================================================= */
 
 :root {
-  /* —— 底色：夜空 —— */
-  --paper:       #131a29;   /* 卡片面 */
-  --paper-2:     #0a0e16;   /* 页面底 */
+  /* —— 底色：夜空 ——
+     因为页面背景是一张照片，正文卡片用不透明色，保证阅读对比不受照片影响。 */
+  --paper:       #131a29;   /* 卡片面（不透明，压住背景照片） */
+  --paper-2:     #0a0e16;   /* 页面底色（照片的兜底） */
   --paper-3:     #1a2334;   /* 浅一层的区块 */
   --sky:         #1d2942;   /* 选中／高亮底色 */
   --sky-deep:    #26344f;
@@ -44,6 +45,12 @@
   --sunset-soft: rgba(232, 131, 74, .13);
   --gold:        #d8a63f;
 
+  /* —— 提示块（"!"开头的那种独立标签）——
+     底色用暖黄而非橙红，深色底上对比度更高、也更像"注意"而非"报错"。 */
+  --warn:        #ffd633;
+  --warn-soft:   rgba(255, 214, 51, .12);
+  --warn-ink:    #ffeaa0;
+
   /* 语义色：路线标签 */
   --tone-paid:   var(--sunset);
   --tone-warn:   #e2705a;
@@ -68,6 +75,14 @@
   --hero-stroke:  rgba(255, 232, 170, .55);
   --hero-logo-bg: rgba(255, 255, 255, .1);
   --hero-chip:    rgba(255, 255, 255, .12);
+
+  /* —— 页面背景：维港烟花实拍 + 格栅 + 压暗 ——
+     照片被压暗、加蒙版、再叠一层细格栅，只作为夜空氛围，
+     不参与阅读，因此正文一律落在不透明的卡片上。 */
+  --bg-image:    url("../img/bg-fireworks.jpg");
+  --bg-scrim:    rgba(6, 10, 18, .80);   /* 压暗照片，保证层次 */
+  --bg-grid:     rgba(255, 255, 255, .05); /* 格栅线 */
+  --bg-grid-size: 46px;
 
   /* —— 排版 —— */
   --font-sans: "PingFang SC", "HarmonyOS Sans SC", "Source Han Sans SC", "Noto Sans SC",
@@ -119,6 +134,50 @@ html {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+
+/* =============================================================
+   页面背景：一层维港烟花实拍
+   · 先铺底色，再叠照片并压暗（--bg-scrim），保证正文对比度
+   · 再叠一层细格栅；用竖向蒙版让顶部照片透出来、越往下越沉
+   · 照片只是氛围，正文一律在不透明卡片上，不依赖背景可读
+   ============================================================= */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background-color: var(--paper-2);
+  background-image: var(--bg-image);
+  background-size: cover;
+  background-position: center 40%;
+  background-repeat: no-repeat;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    /* 格栅 */
+    linear-gradient(var(--bg-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px),
+    /* 压暗层：决定照片残留多少 */
+    linear-gradient(var(--bg-scrim), var(--bg-scrim));
+  background-size:
+    var(--bg-grid-size) var(--bg-grid-size),
+    var(--bg-grid-size) var(--bg-grid-size),
+    100% 100%;
+  /* 顶部让照片透出来，往下逐渐压沉，保证长文阅读 */
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, .78) 0%, #000 46%, #000 100%);
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, .78) 0%, #000 46%, #000 100%);
+}
+
+/* 窄屏换小图，省流量 */
+@media (max-width: 720px) {
+  body::before { background-image: url("../img/bg-fireworks-1000.jpg"); }
 }
 
 body {

@@ -61,9 +61,9 @@
   align-items: flex-start;
   margin: 1.6em 0;
   padding: 1rem 1.15rem;
-  border-left: 3px solid var(--sunset);
+  border-left: 3px solid var(--warn);
   border-radius: 0 var(--radius) var(--radius) 0;
-  background: var(--sunset-soft);
+  background: var(--warn-soft);
 }
 .callout__icon {
   flex: none;
@@ -73,14 +73,14 @@
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: var(--sunset);
-  color: #fff;
+  background: var(--warn);
+  color: #3a2c05;
   font-weight: 700;
   font-size: .74rem;
   font-family: var(--font-num);
 }
-.callout p { margin: 0; font-size: .93rem; color: #6d3a1c; }
-.callout strong { color: #4e2811; }
+.callout p { margin: 0; font-size: .93rem; color: var(--warn-ink); }
+.callout strong { color: #fff3c4; }
 
 /* 引用 */
 .quote {
