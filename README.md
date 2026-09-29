@@ -256,7 +256,27 @@ python -m http.server 8000
 
 ### 上传：双击 `发布到GitHub.bat`
 
-双击后会**自动选择**上传方式：
+双击后依次做两件事。
+
+**① 自动体检**（跑 `check.mjs`）
+
+| 检查 | 能抓出什么 |
+| --- | --- |
+| 标签配平 | 手改 HTML 时删多了或漏了闭合标签 |
+| **锚点死链** | 改了标题文字、却没跟着改目录里的 `#链接`（并提示页面上相近的 id） |
+| 重复 id | 锚点会跳错位置 |
+| 本地资源 | 图片／视频路径写错，或文件被移走 |
+| 体积 | 页面过大，或视频超过 GitHub 单文件 100 MB 硬上限 |
+
+**体检不通过会停下来问你**：
+
+```
+  仍然要上传吗？[Y=上传 / N=停下修改]
+```
+
+按 `N` 就取消，什么都没改；按 `Y` 才继续。想单独体检一次：`node check.mjs`（有问题时退出码为 1）。
+
+**② 自动选择上传方式**
 
 | 情况 | 走哪条路 | 会做什么 |
 | --- | --- | --- |
@@ -266,9 +286,10 @@ python -m http.server 8000
 ### 手动上传（等价于方式 A）
 
 ```bash
-node build.mjs                     # 1. 先把 content/*.md 编译成 index.html
-node upload.mjs --dry-run          # 2. 看看会传哪些文件
-node upload.mjs                    # 3. 上传
+node check.mjs                     # 1. 体检，有问题会以退出码 1 结束
+node build.mjs                     # 2. 把 content/*.md 编译成 index.html
+node upload.mjs --dry-run          # 3. 看看会传哪些文件
+node upload.mjs                    # 4. 上传
 ```
 
 `upload.mjs` 用 Node 自带的 `fetch` 直连 GitHub REST API（Git Data API：blob → tree → commit → 更新分支），
