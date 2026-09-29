@@ -210,6 +210,32 @@ ${p.title || p.desc ? `<figcaption>${p.title ? `<strong>${inline(p.title)}</stro
 </figure>`;
 }
 
+/** 口岸表：- name / hk / hours / access / rec(yes|no) / note */
+function renderPorts(lines) {
+  const items = parseItems(lines);
+  const rows = items
+    .map((p) => {
+      const rec = String(p.rec ?? '').toLowerCase() === 'yes';
+      return `<tr${rec ? ' class="is-rec"' : ''}>
+<td class="ports__name">
+${rec ? '<span class="ports__star" title="推荐" aria-label="推荐">★</span>' : ''}<strong>${inline(p.name)}</strong>
+${p.hk ? `<span class="ports__hk">港方：${inline(p.hk)}</span>` : ''}
+</td>
+<td class="ports__hours">${inline(p.hours)}</td>
+<td class="ports__access">${inline(p.access)}${p.note ? `<span class="ports__note">${inline(p.note)}</span>` : ''}</td>
+</tr>`;
+    })
+    .join('\n');
+  return `<div class="tablewrap ports">
+<table>
+<thead><tr><th>口岸（深圳一侧）</th><th>开放时间</th><th>怎么到 / 说明</th></tr></thead>
+<tbody>
+${rows}
+</tbody>
+</table>
+</div>`;
+}
+
 function renderChecklist(lines) {
   let group = '';
   let gi = 0;
@@ -332,6 +358,7 @@ function renderMarkdown(src, opts = {}) {
       else if (lang === 'steps') out.push(renderSteps(body));
       else if (lang === 'video') out.push(renderVideo(parsePairs(body)));
       else if (lang === 'checklist') out.push(renderChecklist(body));
+      else if (lang === 'ports') out.push(renderPorts(body));
       else out.push(`<pre class="code"><code>${escapeHtml(body.join('\n'))}</code></pre>`);
       continue;
     }

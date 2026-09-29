@@ -20,7 +20,9 @@
 ├── site.config.json        ← ★ 站点与品牌设置：标题、导航、数据条、署名、CTA、页脚
 ├── content/                ← ★ 日常改文案只改这里
 │   ├── 00-intro.md              写在前面
+│   ├── 05-prep.md               行前须知（口岸一览 / 校巴地铁 / 香港上网 / 小巴怎么坐）
 │   ├── 10-routes.md             四条路线
+│   ├── 15-route1-5-paid.md      路线一点五 · 付费赏烟花
 │   ├── 20-route3-peak.md        具体路线 · 太平山
 │   ├── 30-route4-braemar.md     具体路线 · 宝马山
 │   ├── 40-payment.md            关于支付方式
@@ -157,6 +159,19 @@ node build.mjs
 ```markdown
 ![Klook 购票页面](assets/img/route1-klook-ticket.jpg "2026 国庆烟花汇演｜海港城 · 购票页面")
 ```
+
+### 口岸表
+
+````markdown
+```ports
+- name: 福田口岸
+  hk: 落马洲支线管制站
+  hours: "06:30 – 22:30"
+  access: 深圳地铁 4 / 10 号线「福田口岸」站
+  rec: yes          # yes 会加星标并高亮整行
+  note: 从学校出发的首选之一，换乘最快
+```
+````
 
 ### 路线标签
 
