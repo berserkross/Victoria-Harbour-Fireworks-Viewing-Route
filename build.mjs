@@ -597,6 +597,31 @@ ${t.num ? `<span class="toc__num">${escapeHtml(t.num)}</span>` : ''}<span class=
 </div>`)
     .join('\n');
 
+  // ---- 社群宣传（group.enabled 设为 false 即整块隐藏）----
+  const g = cfg.group ?? {};
+  const groupHtml = g.enabled === false || !g.qr ? '' : `<section class="group" id="join">
+<header class="group__head">
+${g.en ? `<p class="group__en">${escapeHtml(g.en)}</p>` : ''}
+<h2 class="group__title">${escapeHtml(g.title ?? '加入我们')}</h2>
+${g.lead ? `<p class="group__lead">${inline(g.lead)}</p>` : ''}
+</header>
+<div class="group__body">
+<div class="group__text">
+<ul class="group__list">
+${(g.items ?? []).map((it) => `<li><strong>${inline(it.title)}</strong><span>${inline(it.desc)}</span></li>`).join('\n')}
+</ul>
+${g.note ? `<p class="group__note">${inline(g.note)}</p>` : ''}
+</div>
+<figure class="group__qr">
+<img src="${escapeHtml(safeUrl(g.qr))}" alt="${escapeHtml(g.qrAlt ?? '')}" width="200" height="200" loading="lazy" decoding="async">
+<figcaption>
+<span class="group__qr-label">${escapeHtml(g.qrLabel ?? '扫码入群')}</span>
+${g.expiry ? `<span class="group__qr-expiry">${inline(g.expiry)}</span>` : ''}
+</figcaption>
+</figure>
+</div>
+</section>`;
+
   const now = new Date();
   const buildDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 
@@ -648,6 +673,7 @@ ${t.num ? `<span class="toc__num">${escapeHtml(t.num)}</span>` : ''}<span class=
     TOC: tocHtml,
     TOPNAV: topnavHtml,
     SECTIONS: sections.join('\n\n'),
+    GROUP: groupHtml,
 
     FOOTER_NOTE: cfg.footer.note,
     FOOTER_DISCLAIMER: cfg.footer.disclaimer,

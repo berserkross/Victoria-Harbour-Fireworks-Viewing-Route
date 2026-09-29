@@ -366,6 +366,126 @@ h2:hover > .anchor,
 h3:hover > .anchor,
 h4:hover > .anchor { opacity: 1; color: var(--ocean); }
 
+/* ------------------------------------------- 社群宣传 */
+
+.group {
+  margin-top: 3.2rem;
+  padding: 2.4rem 2rem 2.2rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(120% 100% at 12% 0%, var(--ocean-soft) 0%, transparent 58%),
+    linear-gradient(180deg, var(--paper-3) 0%, var(--paper) 100%);
+}
+.group__head { margin-bottom: 1.6rem; }
+.group__en {
+  margin: 0 0 .45rem;
+  font-family: var(--font-num);
+  font-size: .64rem;
+  font-weight: 600;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--ocean);
+}
+.group__title {
+  margin: 0 0 .5rem;
+  font-family: var(--font-serif);
+  font-size: clamp(1.4rem, 3.2vw, 1.85rem);
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+.group__lead {
+  margin: 0;
+  max-width: 34rem;
+  font-size: .95rem;
+  color: var(--ink-3);
+  line-height: 1.8;
+}
+
+.group__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2rem;
+  align-items: start;
+}
+.group__list {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+}
+.group__list li {
+  position: relative;
+  padding-left: 1.4rem;
+  margin-bottom: .85rem;
+}
+.group__list li::before {
+  content: "";
+  position: absolute;
+  left: .3em;
+  top: .72em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ocean);
+  opacity: .65;
+}
+.group__list strong {
+  display: block;
+  font-size: .95rem;
+  color: var(--ink);
+}
+.group__list span {
+  display: block;
+  margin-top: .12rem;
+  font-size: .85rem;
+  color: var(--ink-3);
+  line-height: 1.7;
+}
+.group__note {
+  margin: 0;
+  font-size: .85rem;
+  color: var(--ink-3);
+}
+
+/* 二维码：白底卡片，保证深色主题下也能扫 */
+.group__qr {
+  margin: 0;
+  flex: none;
+  width: 200px;
+  text-align: center;
+}
+.group__qr img {
+  width: 200px;
+  height: 200px;
+  display: block;
+  border-radius: var(--radius);
+  background: #fff;
+  padding: 8px;
+  box-shadow: 0 0 0 1px var(--line), var(--shadow);
+}
+.group__qr figcaption { margin-top: .7rem; }
+.group__qr-label {
+  display: block;
+  font-size: .84rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  color: var(--ink-2);
+}
+.group__qr-expiry {
+  display: block;
+  margin-top: .3rem;
+  font-size: .7rem;
+  line-height: 1.6;
+  color: var(--ink-4);
+}
+
+@media (max-width: 720px) {
+  .group { padding: 1.8rem 1.2rem 1.7rem; }
+  .group__body { grid-template-columns: minmax(0, 1fr); gap: 1.6rem; }
+  .group__qr { width: 100%; justify-self: center; max-width: 220px; }
+  .group__qr img { width: 100%; height: auto; margin: 0 auto; }
+}
+
 /* ------------------------------------------- 页尾 CTA「关于我们」 */
 
 .outro {
