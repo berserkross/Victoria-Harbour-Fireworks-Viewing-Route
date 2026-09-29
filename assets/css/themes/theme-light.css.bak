@@ -1,0 +1,161 @@
+/* =============================================================
+   base.css — 设计变量 + 基础排版
+   视觉基调：云海纸刊。白底、墨字、海蓝为点缀，暖色只用于实拍图与极少量强调。
+   换肤只需改下面 :root 里的变量。
+   ============================================================= */
+
+:root {
+  /* —— 底色：云与纸 —— */
+  --paper:       #ffffff;   /* 卡片／纸面 */
+  --paper-2:     #f7f8fa;   /* 页面底 */
+  --paper-3:     #eef2f8;   /* 浅色区块 */
+  --sky:         #dce9f8;   /* 云海淡蓝 */
+  --sky-deep:    #c3d8f0;
+  --line:        #e3e8f0;   /* 发丝线 */
+  --line-strong: #cfd7e3;
+
+  /* —— 文字：墨 —— */
+  --ink:         #101720;   /* 标题 */
+  --ink-2:       #34404f;   /* 正文 */
+  --ink-3:       #6b7889;   /* 次要 */
+  --ink-4:       #97a2b2;   /* 极淡标注 */
+
+  /* —— 品牌色 ——
+     首屏沿用祥波书院八周年主视图的天蓝 #559CD9，
+     正文深色取自祥波书院官网主色 #004080（官网样式表里出现近千次的主色）。
+     想整体换回海洋影像厂原来的 #1b4a8a，只改这一行即可。 */
+  --ocean:       #004080;
+  --ocean-deep:  #00305f;
+  --ocean-soft:  #e8effa;
+  --ocean-line:  rgba(0, 64, 128, .2);
+
+  /* —— 暖色：仅用于实拍图与少量强调，不铺满 —— */
+  --sunset:      #c9622a;
+  --sunset-soft: #fdf1e8;
+  --gold:        #b98a2e;
+
+  /* 语义色：路线标签 */
+  --tone-paid:   var(--sunset);
+  --tone-warn:   #b8452f;
+  --tone-free:   #2c7a63;
+
+  /* —— 排版 —— */
+  --font-sans: "PingFang SC", "HarmonyOS Sans SC", "Source Han Sans SC", "Noto Sans SC",
+               "Microsoft YaHei", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: "Songti SC", "Source Han Serif SC", "Noto Serif SC", Georgia, "Times New Roman", serif;
+  --font-num:  "DIN Alternate", "Bahnschrift", "Helvetica Neue", Arial, sans-serif;
+
+  /* —— 尺寸 —— */
+  --wrap:       1200px;
+  --toc-w:      246px;
+  --radius:     4px;         /* 刊物感：小圆角 */
+  --radius-lg:  8px;
+  --shadow:     0 1px 2px rgba(16, 23, 32, .04), 0 12px 32px -18px rgba(16, 23, 32, .18);
+  --shadow-sm:  0 1px 2px rgba(16, 23, 32, .05);
+  --ring:       0 0 0 3px rgba(27, 74, 138, .22);
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 88px;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+
+body {
+  margin: 0;
+  background: var(--paper-2);
+  color: var(--ink-2);
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.85;
+  letter-spacing: .01em;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img, video { max-width: 100%; height: auto; display: block; }
+
+a { color: var(--ocean); text-decoration: none; }
+a:hover { color: var(--ocean-deep); text-decoration: underline; text-underline-offset: 3px; }
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+summary:focus-visible {
+  outline: none;
+  box-shadow: var(--ring);
+  border-radius: 3px;
+}
+
+h1, h2, h3, h4 {
+  color: var(--ink);
+  margin: 0 0 .6em;
+  font-weight: 600;
+  letter-spacing: -.01em;
+  line-height: 1.35;
+}
+p { margin: 0 0 1.1em; }
+ul, ol { margin: 0 0 1.1em; }
+
+strong { color: var(--ink); font-weight: 600; }
+
+code {
+  font-family: var(--font-num);
+  font-size: .9em;
+  background: var(--ocean-soft);
+  border-radius: 3px;
+  padding: .12em .42em;
+  color: var(--ocean-deep);
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  margin: 2.6em 0;
+  background: var(--line);
+}
+
+::selection { background: var(--sky); color: var(--ink); }
+
+* { scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
+*::-webkit-scrollbar { width: 9px; height: 9px; }
+*::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 99px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover { background: var(--ink-4); background-clip: padding-box; }
+
+/* 小标签：英文大写字距标签，刊物常用 */
+.eyebrow {
+  font-family: var(--font-num);
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ocean);
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 200;
+  padding: .7em 1.2em;
+  background: var(--ocean);
+  color: #fff;
+  font-weight: 600;
+  border-radius: 0 0 6px 0;
+}
+.skip-link:focus { left: 0; }

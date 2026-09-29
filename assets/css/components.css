@@ -24,7 +24,7 @@
 .btn:hover { text-decoration: none; transform: translateY(-1px); }
 
 .btn--primary {
-  background: var(--ocean);
+  background: var(--blue);
   color: #fff;
   box-shadow: 0 8px 20px -12px rgba(27, 74, 138, .8);
 }
@@ -43,12 +43,12 @@
   color: #1a4b7a;
   box-shadow: 0 10px 26px -14px rgba(8, 34, 60, .8);
 }
-.btn--light:hover { background: #f2f8ff; color: #123a60; }
+.btn--light:hover { background: #e6f0fb; color: #0e2c4a; }
 
 .btn--outline {
-  background: rgba(255, 255, 255, .1);
+  background: var(--hero-chip);
   color: #fff;
-  border-color: rgba(255, 255, 255, .62);
+  border-color: rgba(255, 255, 255, .45);
   backdrop-filter: blur(4px);
 }
 .btn--outline:hover { background: rgba(255, 255, 255, .2); color: #fff; border-color: #fff; }
@@ -115,7 +115,7 @@
   font-size: .72rem;
   font-weight: 600;
   letter-spacing: .08em;
-  background: var(--paper-3);
+  background: var(--chip);
   color: var(--ink-3);
   flex: none;
 }
@@ -123,9 +123,9 @@
 .meta--paid { border-left-color: var(--tone-paid); }
 .meta--paid .meta__tag { background: var(--sunset-soft); color: var(--tone-paid); }
 .meta--warn { border-left-color: var(--tone-warn); }
-.meta--warn .meta__tag { background: #fbecea; color: var(--tone-warn); }
+.meta--warn .meta__tag { background: rgba(226, 112, 90, .15); color: var(--tone-warn); }
 .meta--free { border-left-color: var(--tone-free); }
-.meta--free .meta__tag { background: #e9f5f1; color: var(--tone-free); }
+.meta--free .meta__tag { background: rgba(79, 195, 156, .15); color: var(--tone-free); }
 
 /* ------------------------------------------------------- 速览卡片 */
 
@@ -466,7 +466,7 @@ img.inline-img {
   margin: .28em 0 0;
   border: 1.5px solid var(--line-strong);
   border-radius: 3px;
-  background: var(--paper);
+  background: var(--field);
   cursor: pointer;
   position: relative;
   transition: background .16s, border-color .16s;
@@ -508,7 +508,7 @@ img.inline-img {
   height: 18px;
   border-radius: 4px;
   object-fit: cover;
-  box-shadow: 0 0 0 1px rgba(16, 23, 32, .12);
+  box-shadow: 0 0 0 1px var(--line);
 }
 /* 手机上注解换行，图标跟着折下去 */
 @media (max-width: 480px) {
@@ -527,7 +527,7 @@ img.inline-img {
   display: grid;
   place-items: center;
   padding: 3.2rem 1rem 3.6rem;
-  background: rgba(255, 255, 255, .97);
+  background: color-mix(in srgb, var(--paper-2) 96%, transparent);
   animation: lb-in .18s ease;
 }
 @keyframes lb-in { from { opacity: 0; } to { opacity: 1; } }
@@ -537,7 +537,7 @@ img.inline-img {
   max-height: calc(100vh - 8rem);
   object-fit: contain;
   border-radius: var(--radius-lg);
-  box-shadow: 0 30px 80px -34px rgba(16, 23, 32, .5);
+  box-shadow: 0 30px 80px -34px rgba(0, 0, 0, .85);
   background: var(--paper-2);
 }
 .lightbox__cap {

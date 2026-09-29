@@ -1,43 +1,73 @@
 /* =============================================================
    base.css — 设计变量 + 基础排版
-   视觉基调：云海纸刊。白底、墨字、海蓝为点缀，暖色只用于实拍图与极少量强调。
-   换肤只需改下面 :root 里的变量。
+   =============================================================
+
+   ★ 换主题只改这个文件的 :root，别处不用动。
+
+   当前生效：夜空主题（深色），契合夜空与烟花。
+   备用方案：浅色「云海纸刊」主题
+             · 完整备份：src/css/themes/theme-light.css.bak
+             · 取值速查：本文件末尾的注释块
+   想换回去，把 :root 的变量替换成备份里的那一组即可。
+
+   首屏另有一组 --hero-* 变量，两套主题取值不同：
+   浅色主题是「天蓝底 + 白字」，夜空主题是「深蓝底 + 暖金描边字」。
    ============================================================= */
 
 :root {
-  /* —— 底色：云与纸 —— */
-  --paper:       #ffffff;   /* 卡片／纸面 */
-  --paper-2:     #f7f8fa;   /* 页面底 */
-  --paper-3:     #eef2f8;   /* 浅色区块 */
-  --sky:         #dce9f8;   /* 云海淡蓝 */
-  --sky-deep:    #c3d8f0;
-  --line:        #e3e8f0;   /* 发丝线 */
-  --line-strong: #cfd7e3;
+  /* —— 底色：夜空 —— */
+  --paper:       #131a29;   /* 卡片面 */
+  --paper-2:     #0a0e16;   /* 页面底 */
+  --paper-3:     #1a2334;   /* 浅一层的区块 */
+  --sky:         #1d2942;   /* 选中／高亮底色 */
+  --sky-deep:    #26344f;
+  --line:        #232d42;   /* 发丝线 */
+  --line-strong: #33405b;
 
-  /* —— 文字：墨 —— */
-  --ink:         #101720;   /* 标题 */
-  --ink-2:       #34404f;   /* 正文 */
-  --ink-3:       #6b7889;   /* 次要 */
-  --ink-4:       #97a2b2;   /* 极淡标注 */
+  /* —— 文字：夜色里偏暖的白 —— */
+  --ink:         #f2f5fa;   /* 标题 */
+  --ink-2:       #ccd5e2;   /* 正文 */
+  --ink-3:       #93a0b5;   /* 次要 */
+  --ink-4:       #6a7791;   /* 极淡标注 */
 
   /* —— 品牌色 ——
-     首屏沿用祥波书院八周年主视图的天蓝 #559CD9，
-     正文深色取自祥波书院官网主色 #004080（官网样式表里出现近千次的主色）。
-     想整体换回海洋影像厂原来的 #1b4a8a，只改这一行即可。 */
-  --ocean:       #004080;
-  --ocean-deep:  #00305f;
-  --ocean-soft:  #e8effa;
-  --ocean-line:  rgba(0, 64, 128, .2);
+     深色底下必须提亮，否则官网主色 #004080 会糊进背景里。
+     这里用 #004080 的同色相提亮版；实心按钮仍用原色（按钮上是白字）。 */
+  --ocean:       #6ba9e8;
+  --ocean-deep:  #8dc0f2;
+  --ocean-soft:  rgba(107, 169, 232, .12);
+  --ocean-line:  rgba(107, 169, 232, .3);
+  --blue:        #004080;
 
-  /* —— 暖色：仅用于实拍图与少量强调，不铺满 —— */
-  --sunset:      #c9622a;
-  --sunset-soft: #fdf1e8;
-  --gold:        #b98a2e;
+  /* —— 暖色：夜空下反而更贴题 —— */
+  --sunset:      #e8834a;
+  --sunset-soft: rgba(232, 131, 74, .13);
+  --gold:        #d8a63f;
 
   /* 语义色：路线标签 */
   --tone-paid:   var(--sunset);
-  --tone-warn:   #b8452f;
-  --tone-free:   #2c7a63;
+  --tone-warn:   #e2705a;
+  --tone-free:   #4fc39c;
+
+  /* —— 通用面/边：各组件统一引用，避免到处写死浅色 —— */
+  --chip:        rgba(255, 255, 255, .07);
+  --field:       #0d1320;
+  --scrim:       rgba(4, 7, 12, .74);
+  --shadow:      0 1px 2px rgba(0, 0, 0, .5), 0 18px 44px -20px rgba(0, 0, 0, .85);
+  --shadow-sm:   0 1px 2px rgba(0, 0, 0, .4);
+  --ring:        0 0 0 3px rgba(107, 169, 232, .35);
+
+  /* —— 首屏（夜空版）—— */
+  --hero-bg-1:    #16305c;
+  --hero-bg-2:    #102546;
+  --hero-bg-3:    #0c1c36;
+  --hero-fg:      #eef4ff;
+  --hero-fg-dim:  rgba(238, 244, 255, .78);
+  --hero-rule:    rgba(255, 255, 255, .6);
+  --hero-line:    rgba(255, 255, 255, .16);
+  --hero-stroke:  rgba(255, 232, 170, .55);
+  --hero-logo-bg: rgba(255, 255, 255, .1);
+  --hero-chip:    rgba(255, 255, 255, .12);
 
   /* —— 排版 —— */
   --font-sans: "PingFang SC", "HarmonyOS Sans SC", "Source Han Sans SC", "Noto Sans SC",
@@ -50,10 +80,31 @@
   --toc-w:      246px;
   --radius:     4px;         /* 刊物感：小圆角 */
   --radius-lg:  8px;
-  --shadow:     0 1px 2px rgba(16, 23, 32, .04), 0 12px 32px -18px rgba(16, 23, 32, .18);
-  --shadow-sm:  0 1px 2px rgba(16, 23, 32, .05);
-  --ring:       0 0 0 3px rgba(27, 74, 138, .22);
 }
+
+/* =============================================================
+   换回浅色「云海纸刊」主题：把下面这组值覆盖到上面的 :root。
+
+   --paper: #ffffff;      --paper-2: #f7f8fa;    --paper-3: #eef2f8;
+   --sky: #dce9f8;        --sky-deep: #c3d8f0;
+   --line: #e3e8f0;       --line-strong: #cfd7e3;
+   --ink: #101720;        --ink-2: #34404f;      --ink-3: #6b7889;   --ink-4: #97a2b2;
+   --ocean: #004080;      --ocean-deep: #00305f;
+   --ocean-soft: #e8effa; --ocean-line: rgba(0, 64, 128, .2);  --blue: #004080;
+   --sunset: #c9622a;     --sunset-soft: #fdf1e8;              --gold: #b98a2e;
+   --tone-warn: #b8452f;  --tone-free: #2c7a63;
+   --chip: #eef2f8;       --field: #ffffff;      --scrim: rgba(16, 23, 32, .34);
+   --shadow: 0 1px 2px rgba(16,23,32,.04), 0 12px 32px -18px rgba(16,23,32,.18);
+   --shadow-sm: 0 1px 2px rgba(16,23,32,.05);
+   --ring: 0 0 0 3px rgba(27, 74, 138, .22);
+
+   首屏（浅色版：天蓝底 + 白字）
+   --hero-bg-1: #62a6de;  --hero-bg-2: #559cd9;  --hero-bg-3: #4a90d0;
+   --hero-fg: #ffffff;    --hero-fg-dim: rgba(255,255,255,.78);
+   --hero-rule: rgba(255,255,255,.5);   --hero-line: rgba(255,255,255,.5);
+   --hero-stroke: rgba(255,248,225,.82);
+   --hero-logo-bg: #ffffff;   --hero-chip: rgba(255,255,255,.1);
+   ============================================================= */
 
 *,
 *::before,

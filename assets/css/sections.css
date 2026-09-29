@@ -3,8 +3,20 @@
    ============================================================= */
 
 /* ============================================================
+   鼠标点击的烟花特效（画布由 fireworks.js 创建）
+   固定在视口、不接收指针事件，完全不影响点按。
+   ============================================================ */
+.fw-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  display: block;
+}
+
+/* ============================================================
    首屏 —— 沿用祥波书院八周年主视图的视觉语言
-   底色 #559CD9 天蓝（取自主视图实测）、细白几何线稿、
+   底色由 --hero-bg-* 控制（夜空主题下是深蓝），细白几何线稿、
    极细大间距字标、一条横穿全幅的白线两端各一个白点。
    ============================================================ */
 
@@ -13,7 +25,7 @@
   margin-bottom: 2.4rem;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  background: #559cd9;
+  background: var(--hero-bg-2);
   box-shadow: var(--shadow);
 }
 
@@ -22,8 +34,8 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(120% 110% at 78% 8%, rgba(255, 255, 255, .22) 0%, rgba(255, 255, 255, 0) 62%),
-    linear-gradient(168deg, #62a6de 0%, #559cd9 46%, #4a90d0 100%);
+    radial-gradient(120% 110% at 78% 8%, rgba(255, 255, 255, .12) 0%, rgba(255, 255, 255, 0) 62%),
+    linear-gradient(168deg, var(--hero-bg-1) 0%, var(--hero-bg-2) 46%, var(--hero-bg-3) 100%);
 }
 .hero__grain {
   position: absolute;
@@ -31,7 +43,7 @@
   opacity: .5;
   mix-blend-mode: soft-light;
   background-image:
-    radial-gradient(rgba(255, 255, 255, .55) .5px, transparent .6px),
+    radial-gradient(rgba(255, 255, 255, .3) .5px, transparent .6px),
     radial-gradient(rgba(0, 0, 0, .28) .5px, transparent .6px);
   background-size: 3px 3px, 4px 4px;
   background-position: 0 0, 1px 2px;
@@ -42,9 +54,9 @@
   width: 100%;
   height: 100%;
 }
-.hero__art-lines { fill: none; stroke: rgba(255, 255, 255, .5); stroke-width: 1.4; }
+.hero__art-lines { fill: none; stroke: var(--hero-line); stroke-width: 1.4; }
 .hero__art-lines .is-dashed { stroke-dasharray: 9 7; }
-.hero__rule { fill: #fff; stroke: #fff; stroke-width: 1.6; stroke-linecap: round; }
+.hero__rule { fill: var(--hero-rule); stroke: var(--hero-rule); stroke-width: 1.6; stroke-linecap: round; }
 .hero__rule circle { stroke: none; }
 
 /* 线稿缓缓舒展，呼应主视图里图形「生长」的动作 */
@@ -67,7 +79,7 @@
   z-index: 2;
   padding: 3.2rem 2.6rem 3.4rem;
   max-width: 44rem;
-  color: #fff;
+  color: var(--hero-fg);
 }
 @media (max-width: 720px) {
   .hero__inner { padding: 2.2rem 1.3rem 2.6rem; }
@@ -85,7 +97,7 @@
   height: 52px;
   flex: none;
   border-radius: 50%;
-  background: #fff;
+  background: var(--hero-logo-bg);
   padding: 4px;
   object-fit: contain;
   box-shadow: 0 6px 18px -8px rgba(10, 40, 70, .55), 0 0 0 1px rgba(255, 255, 255, .6);
@@ -149,7 +161,7 @@
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  -webkit-text-stroke: .7px rgba(255, 248, 225, .82);
+  -webkit-text-stroke: .7px var(--hero-stroke);
   /* 注意：字身已被 background-clip 挖空，Chrome 不会再绘制 text-shadow，
      所以下面这行目前看不到效果。想要投影，得改用「同一段文字再叠一层」的写法
      （参考本文件 .hero__title::after 的做法）。 */
@@ -212,7 +224,7 @@
   max-width: 30rem;
   font-size: 1.02rem;
   line-height: 1.8;
-  color: rgba(255, 255, 255, .92);
+  color: var(--hero-fg);
 }
 
 .hero__cta { margin: 0; display: flex; flex-wrap: wrap; gap: .6rem; }
@@ -362,8 +374,8 @@ h4:hover > .anchor { opacity: 1; color: var(--ocean); }
   border-radius: var(--radius-lg);
   text-align: center;
   background:
-    radial-gradient(120% 100% at 50% 0%, #ffffff 0%, rgba(255, 255, 255, 0) 60%),
-    linear-gradient(180deg, #eef4fc 0%, #e2ecf9 100%);
+    radial-gradient(120% 100% at 50% 0%, rgba(107, 169, 232, .14) 0%, rgba(107, 169, 232, 0) 60%),
+    linear-gradient(180deg, var(--paper-3) 0%, var(--paper) 100%);
   border: 1px solid var(--line);
 }
 .outro__label {
@@ -419,7 +431,7 @@ h4:hover > .anchor { opacity: 1; color: var(--ocean); }
   flex: none;
   border-radius: 50%;
   object-fit: cover;
-  background: #fff;
+  background: var(--hero-logo-bg);
   box-shadow: 0 0 0 1px var(--line);
 }
 .footer__names { min-width: 0; }

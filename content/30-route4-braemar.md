@@ -83,32 +83,32 @@ summary: 视野最好 · 需走约 20 分钟山路 · 下山无路灯
   img: assets/img/route4-13-dirt-path.jpg
   cap: 岔口选右边的土路，别走左边
 - n: "14"
-  title: 拿不准就往右
+  title: 遇事不决选右边
   img: assets/img/route4-14-keep-right-1.jpg
-  cap: 拿不准的时候往右走
+  cap: 遇事不决选右边
 - n: "15"
-  title: 还是往右
+  title: 遇事不决选右边×2
   img: assets/img/route4-15-keep-right-2.jpg
-  cap: 再拿不准，还是往右
+  cap: 遇事不决选右边×2
 - n: "16"
   title: 认准这块指示牌
   img: assets/img/route4-16-signboard.jpg
   cap: 认准"金督馳馬徑觀景台 SIR CECIL'S RIDE VIEWING POINT"这块全景指示牌，上面标了维港两岸的地标
 - n: "17"
-  title: 到了
+  title: 到达
   img: assets/img/route4-17-viewpoint.jpg
-  cap: 观景台看到的画面，维港和港岛天际线都在眼前（图为日落时分）
+  cap: 港岛天际线都在眼前
 - n: "18"
+  title: 再往里走几步
+  img: assets/img/route4-18-harbour-view.jpg
+  cap: 维港一览无余
+- n: "19"
   title: 原路下山
   img: null
   cap: null
   note: 山路没灯，**手电必须带**，也留意一下同行的人脚下。
 ```
 
-## 那天我们看到的
+## 宝马山的落日
 
-这是海洋影像厂踩点当天在这个位置拍到的日落。同一条路，白天和傍晚完全是两回事。
-
-![太平山俯瞰港岛天际线的日落剪影](assets/img/hero-cover-1600.jpg "太平山方向俯瞰港岛天际线 · 摄于 2026.09.24 · 摄影：杨天瑞")
-
-!!! 这张原来放在首屏，现在首屏换成了书院风格的主视图，就挪到这里。
+![宝马山顶俯瞰残阳](assets/img/hero-cover-1600.jpg "宝马山顶俯瞰残阳 2026.9.24. 杨天瑞")
