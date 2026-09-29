@@ -597,28 +597,18 @@ ${t.num ? `<span class="toc__num">${escapeHtml(t.num)}</span>` : ''}<span class=
 </div>`)
     .join('\n');
 
-  // ---- 社群宣传（group.enabled 设为 false 即整块隐藏）----
+  // ---- 社群宣传（活泼版：一句话大字 + 若干行 + 二维码）----
   const g = cfg.group ?? {};
   const groupHtml = g.enabled === false || !g.qr ? '' : `<section class="group" id="join">
-<header class="group__head">
-${g.en ? `<p class="group__en">${escapeHtml(g.en)}</p>` : ''}
-<h2 class="group__title">${escapeHtml(g.title ?? '加入我们')}</h2>
-${g.lead ? `<p class="group__lead">${inline(g.lead)}</p>` : ''}
-</header>
-<div class="group__body">
-<div class="group__text">
-<ul class="group__list">
-${(g.items ?? []).map((it) => `<li><strong>${inline(it.title)}</strong><span>${inline(it.desc)}</span></li>`).join('\n')}
-</ul>
-${g.note ? `<p class="group__note">${inline(g.note)}</p>` : ''}
+<div class="group__qr">
+<img src="${escapeHtml(safeUrl(g.qr))}" alt="${escapeHtml(g.qrAlt ?? '')}" width="220" height="220" loading="lazy" decoding="async">
+<span class="group__qr-label">${escapeHtml(g.qrLabel ?? '扫码加入群聊')}</span>
 </div>
-<figure class="group__qr">
-<img src="${escapeHtml(safeUrl(g.qr))}" alt="${escapeHtml(g.qrAlt ?? '')}" width="200" height="200" loading="lazy" decoding="async">
-<figcaption>
-<span class="group__qr-label">${escapeHtml(g.qrLabel ?? '扫码入群')}</span>
-${g.expiry ? `<span class="group__qr-expiry">${inline(g.expiry)}</span>` : ''}
-</figcaption>
-</figure>
+<div class="group__text">
+${g.headline ? `<p class="group__headline">${inline(g.headline)}</p>` : ''}
+<ul class="group__lines">
+${(g.lines ?? []).map((l) => `<li>${inline(l)}</li>`).join('\n')}
+</ul>
 </div>
 </section>`;
 
@@ -628,6 +618,30 @@ ${g.expiry ? `<span class="group__qr-expiry">${inline(g.expiry)}</span>` : ''}
   const b = cfg.brand ?? {};
   const h = cfg.hero ?? {};
   const link = b.links ?? {};
+
+  // ---- 页脚彩蛋（折叠，点击展开；egg.enabled=false 即隐藏）----
+  // 注意：依赖上面的 b（brand 配置），所以必须放在 b 之后。
+  const e = cfg.egg ?? {};
+  const eggHtml = e.enabled === false ? '' : `
+<details class="egg">
+<summary class="egg__summary">
+<span class="egg__hint">${escapeHtml(e.hint ?? '彩蛋')}</span>
+<span class="egg__mark" aria-hidden="true">🎁</span>
+</summary>
+<div class="egg__body">
+<p class="egg__congrats">${inline(e.congrats ?? '')}</p>
+<dl class="footer__credit egg__credit">
+<div><dt>${escapeHtml(b.creditEn ?? '')}</dt><dd>${escapeHtml(b.credit ?? '')}</dd></div>
+<div><dt>PHOTO CREDIT</dt><dd>${escapeHtml(b.photoCredit ?? '')}</dd></div>
+</dl>
+<div class="egg__feed">
+${e.mascot ? `<img class="egg__mascot" src="${escapeHtml(safeUrl(e.mascot))}" alt="${escapeHtml(e.mascotAlt ?? '')}" width="170" height="170" loading="lazy" decoding="async">` : ''}
+${e.feed ? `<p class="egg__feed-text">${inline(e.feed)}</p>` : ''}
+${e.payQr ? `<img class="egg__pay" src="${escapeHtml(safeUrl(e.payQr))}" alt="${escapeHtml(e.payAlt ?? '')}" width="200" height="200" loading="lazy" decoding="async">
+${e.payLabel ? `<p class="egg__pay-label">${inline(e.payLabel)}</p>` : ''}` : ''}
+</div>
+</div>
+</details>`;
 
   const vars = {
     LANG: cfg.site.lang ?? 'zh-CN',
@@ -674,6 +688,7 @@ ${g.expiry ? `<span class="group__qr-expiry">${inline(g.expiry)}</span>` : ''}
     TOPNAV: topnavHtml,
     SECTIONS: sections.join('\n\n'),
     GROUP: groupHtml,
+    EGG: eggHtml,
 
     FOOTER_NOTE: cfg.footer.note,
     FOOTER_DISCLAIMER: cfg.footer.disclaimer,

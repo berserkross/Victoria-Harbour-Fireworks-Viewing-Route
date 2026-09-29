@@ -108,6 +108,43 @@
 
 全部集中在 `site.config.json` 的 `brand` 与 `hero` 两节，改完运行 `node build.mjs` 即可，**不需要动 HTML**。
 
+### 页尾的社群宣传与彩蛋
+
+两者都是可开关的，内容都在 `site.config.json`：
+
+**`group` 节 —— 社群宣传**（二维码 + 宣传语）
+
+```json
+"group": {
+  "enabled": true,                              // false 即整块隐藏
+  "qr": "assets/img/group-qr.jpg",              // 换码：同名覆盖即可
+  "qrLabel": "扫码加入群聊",
+  "headline": "✨ 我在龙大按快门 📷",
+  "lines": ["欢迎加入群聊！", "……"]
+}
+```
+
+> ⚠️ **微信群二维码只有 7 天有效期。** 过期后换掉 `assets/img/group-qr.jpg`，
+> 或直接把 `enabled` 设为 `false` 把整块拿掉。
+
+**`egg` 节 —— 页尾彩蛋**（折叠，点击才展开）
+
+展开后依次显示：祝贺语 → 原署名行 → DeepSeek 鲸鱼娘 + 「喂我吃 token 小蛋糕」→ 微信经营收款码。
+
+```json
+"egg": {
+  "enabled": true,          // false 则整块（含署名）都不渲染
+  "hint": "彩蛋",            // 折叠条上的提示文字
+  "congrats": "🥰 恭喜你发现彩蛋 🎉",
+  "mascot": "assets/img/egg-deepseek.jpg",
+  "feed": "喜欢的话可以喂我吃 token 小蛋糕",
+  "payQr": "assets/img/egg-pay-qr.jpg"
+}
+```
+
+> 署名（策划 / 摄影 / 编辑）已从页脚移到彩蛋里，**不在页脚常驻显示**。
+> 若想让它回到页脚明面，把 `<details class="egg">` 改成 `<div class="egg egg--open">` 即可。
+
 ---
 
 ## 三、怎么改内容

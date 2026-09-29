@@ -52,19 +52,27 @@
 
   "group": {
     "enabled": true,
-    "en": "JOIN US",
-    "title": "加入我们",
-    "lead": "海洋影像厂领衔的摄影爱好者聚集地，面向港中深全体师生。",
-    "items": [
-      { "title": "机位与答疑", "desc": "校园、深圳、香港的机位攻略，有问题群里直接问。" },
-      { "title": "约拍与外拍", "desc": "约拍、外拍、工作坊信息互通。" },
-      { "title": "活动与返图", "desc": "活动号召，以及拍完之后互相返图交流。" }
-    ],
-    "note": "看完烟花欢迎尽情返图。群内以摄影为主，轻度闲聊也可以。",
     "qr": "assets/img/group-qr.jpg",
     "qrAlt": "海洋影像厂摄影社群的微信群二维码",
-    "qrLabel": "扫码入群",
-    "expiry": "该二维码 7 天内（10 月 6 日前）有效，过期请找 @杨天瑞 宣传部长 换新的。"
+    "qrLabel": "扫码加入群聊",
+    "headline": "✨ 我在龙大按快门 📷",
+    "lines": [
+      "欢迎加入群聊！",
+      "海洋影像厂领衔的摄影爱好者聚集地",
+      "睇完烟花欢迎尽情返图！"
+    ]
+  },
+
+  "egg": {
+    "enabled": true,
+    "hint": "彩蛋",
+    "congrats": "🥰 恭喜你发现彩蛋 🎉",
+    "mascot": "assets/img/egg-deepseek.jpg",
+    "mascotAlt": "DeepSeek 的鲸鱼娘形象",
+    "feed": "喜欢的话可以喂我吃 token 小蛋糕",
+    "payQr": "assets/img/egg-pay-qr.jpg",
+    "payAlt": "海洋影像厂的微信经营收款码",
+    "payLabel": "海洋的摄影小铺"
   },
 
   "nav": [
