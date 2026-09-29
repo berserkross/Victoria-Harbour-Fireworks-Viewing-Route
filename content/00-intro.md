@@ -12,7 +12,7 @@
 
 官方页面如下，日期与时间以它为准：
 
-- **香港旅游发展局 · 2026 年国庆烟花汇演** <https://www.discoverhongkong.com/tc/events/event.id89562.2026%E5%B9%B4%E5%9C%8B%E6%85%B6%E7%85%99%E8%8A%B1%E5%8C%AF%E6%BC%94.html>
+- **香港旅游发展局 · 2026 年国庆烟花汇演** → [查看官方页面](https://www.discoverhongkong.com/tc/events/event.id89562.2026%E5%B9%B4%E5%9C%8B%E6%85%B6%E7%85%99%E8%8A%B1%E5%8C%AF%E6%BC%94.html)
 
 !!! 汇演日期、时间与规模每年都可能变动。出行前请以官方公告为准。
 

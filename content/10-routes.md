@@ -64,17 +64,13 @@ summary: 免费点位人最多，付费点位最省事
 国庆当天的名额通常**提前一到两个月就开卖**，热门项目会售罄。下面是往年国庆档期在售、比较有代表性的四个。只作**类型参考**，每年的项目、价格、开不开卖都会变，以平台当期页面为准：
 
 - **洋紫荆号 · 国庆海上烟花观赏自助晚餐**
-  登船出海，在维港中央边吃自助餐边看烟花。
-  <https://www.klook.com/zh-CN/activity/96889-bauhinia-firework-buffet/>
+  登船出海，在维港中央边吃自助餐边看烟花。 → [打开页面](https://www.klook.com/zh-CN/activity/96889-bauhinia-firework-buffet/)
 - **星海维港 · 英式奢华游艇体验**
-  小型游艇，含精致餐饮与拍摄服务，人数少、位置好。
-  <https://www.klook.cn/zh-CN/activity/171136-starry-harbour-cruise-an-all-inclusive-luxury-voyage/>
+  小型游艇，含精致餐饮与拍摄服务，人数少、位置好。 → [打开页面](https://www.klook.cn/zh-CN/activity/171136-starry-harbour-cruise-an-all-inclusive-luxury-voyage/)
 - **香港港丽酒店 · 国庆日国际自助晚餐（连同烟花汇演）**
-  高空酒店餐厅的典型代表，适合"坐着看"。
-  <https://eshop.conraddining.com/zh-hans/product/national-day-international-dinner-buffet-with-fireworks-display-2026/>
+  高空酒店餐厅的典型代表，适合"坐着看"。 → [打开页面](https://eshop.conraddining.com/zh-hans/product/national-day-international-dinner-buffet-with-fireworks-display-2026/)
 - **国庆烟花汇演观赏套票（含水果甜点与无限饮品小食）**
-  偏轻量的一类。不想吃正餐、只想有个固定位置的话合适。
-  <https://www.klook.cn/zh-CN/activity/175189-national-day-fireworks-display-includes-fruits-desserts-and-drinks/>
+  偏轻量的一类。不想吃正餐、只想有个固定位置的话合适。 → [打开页面](https://www.klook.cn/zh-CN/activity/175189-national-day-fireworks-display-includes-fruits-desserts-and-drinks/)
 
 !!! **路线一其实就是这一类的"最省钱版本"。** 同样是买票进场，只是位置换成了陆地上层的露天停车场。只想要"不用挤 + 正面视角"，选它。
 
