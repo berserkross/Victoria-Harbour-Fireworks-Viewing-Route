@@ -1,7 +1,7 @@
 {
   "site": {
     "lang": "zh-CN",
-    "title": "国庆维港烟花路线",
+    "title": "国庆维港烟花路线指南",
     "subtitle": "2026 香港国庆烟花汇演 · 观赏机位与交通攻略",
     "description": "香港中文大学（深圳）祥波书院海洋影像厂出品：四条维港烟花观赏路线、两条实测具体路线（太平山・宝马山）、支付方式与八达通指南。",
     "keywords": ["香港", "国庆烟花", "维港烟花", "太平山", "宝马山", "观赏路线", "攻略", "海洋影像厂", "祥波书院"],
@@ -32,7 +32,7 @@
   "hero": {
     "kicker": "2026 香港国庆烟花汇演",
     "kickerEn": "NATIONAL DAY FIREWORKS · VICTORIA HARBOUR",
-    "title": "国庆维港烟花路线",
+    "title": "国庆维港烟花路线指南",
     "lead": "四条观赏路线，两条实测走法。从过关到站位，一步一图。",
     "cover": "assets/img/hero-cover.jpg",
     "cover1600": "assets/img/hero-cover-1600.jpg",
