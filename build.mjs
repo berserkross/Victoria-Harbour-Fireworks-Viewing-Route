@@ -670,6 +670,7 @@ ${e.contact ? `<p class="egg__contact">${inline(e.contact)}</p>` : ''}
     HERO_KICKER_EN: h.kickerEn ?? '',
     HERO_TITLE: h.title ?? cfg.site.title,
     HERO_LEAD: h.lead ?? '',
+    HERO_TIP: h.tip ?? '',
     HERO_COVER: h.cover ?? '',
     HERO_COVER_1600: h.cover1600 ?? h.cover ?? '',
     HERO_COVER_900: h.cover900 ?? h.cover ?? '',
