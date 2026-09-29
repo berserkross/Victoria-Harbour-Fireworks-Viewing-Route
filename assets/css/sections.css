@@ -132,17 +132,34 @@
   font-weight: 700;
   line-height: 1.16;
   letter-spacing: .03em;
-  /* 深藏蓝字身 + 极细米色描边。藏蓝取自祥波书院官网主色 #004080 一系，
-     在 #559CD9 浅蓝底上对比强；描边只用来勾字口，不做发光。 */
+  /* 五彩色烟花式渐变：冷色标题底保留深藏蓝回退色，再叠一层流动渐变。 */
   color: #01274d;
-  -webkit-text-stroke: .6px rgba(255, 246, 220, .5);
+  background-image: linear-gradient(
+    105deg,
+    #ff3156 0%,
+    #ff8c00 16%,
+    #ffd60a 32%,
+    #2dd4bf 48%,
+    #3b82f6 65%,
+    #b455ff 82%,
+    #ff3156 100%
+  );
+  background-size: 300% 100%;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: .7px rgba(255, 248, 225, .82);
+  /* 注意：字身已被 background-clip 挖空，Chrome 不会再绘制 text-shadow，
+     所以下面这行目前看不到效果。想要投影，得改用「同一段文字再叠一层」的写法
+     （参考本文件 .hero__title::after 的做法）。 */
   text-shadow:
-    0 1px 0 rgba(255, 255, 255, .2),
-    0 8px 22px rgba(6, 28, 52, .32);
+    0 1px 0 rgba(255, 255, 255, .18),
+    0 9px 24px rgba(5, 25, 46, .42);
   text-wrap: balance;
 }
 
-/* 朴素特效：一道很淡的高光每 12 秒缓慢扫过标题。
+/* 烟花高光：一道白金色闪光扫过字面，配合底层渐变形成爆闪感。
    用「同一段文字叠一层 + mask 出字形」实现，而不是 background-clip，
    这样上面那层描边与投影不会被裁掉。 */
 .hero__title::after {
@@ -154,9 +171,11 @@
   -webkit-text-stroke: 0;
   background-image: linear-gradient(
     100deg,
-    rgba(255, 255, 255, 0) 44%,
-    rgba(255, 255, 255, .62) 50%,
-    rgba(255, 255, 255, 0) 56%
+    rgba(255, 255, 255, 0) 38%,
+    rgba(255, 255, 255, .32) 44%,
+    rgba(255, 241, 150, .92) 50%,
+    rgba(255, 255, 255, .32) 56%,
+    rgba(255, 255, 255, 0) 62%
   );
   background-size: 250% 100%;
   background-repeat: no-repeat;
@@ -166,7 +185,13 @@
   mask-image: linear-gradient(#000, #000);
 }
 @media (prefers-reduced-motion: no-preference) {
-  .hero__title::after { animation: hero-sheen 12s cubic-bezier(.45, 0, .55, 1) 1.8s infinite; }
+  .hero__title { animation: hero-fireworks 7s ease-in-out infinite; }
+  .hero__title::after { animation: hero-sheen 5.2s cubic-bezier(.45, 0, .55, 1) 1.2s infinite; }
+}
+@keyframes hero-fireworks {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 @keyframes hero-sheen {
   0%   { background-position: 175% 0; }
