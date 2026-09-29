@@ -35,9 +35,11 @@ const WITH_PAGES = args.has('--with-pages');
 /* 不参与上传的本地文件 */
 const IGNORE_DIRS = new Set(['.git', 'node_modules', '_tmp_probe']);
 const IGNORE_FILES = new Set([
-  '_build.log', '_b.log', 'ci.log', 'upload.log', 'diag.log',
-  '.token.txt', 'dsh-token.txt', 'diag.mjs',
+  '_build.log', '_b.log', 'ci.log', 'upload.log', 'up.log', 'diag.log', 'verify.log', 'v.log',
+  '.token.txt', 'dsh-token.txt', 'diag.mjs', '_verify.mjs',
 ]);
+/** 除 IGNORE_FILES 外，一律不上传任何 .log 文件 */
+const isIgnoredFile = (name) => IGNORE_FILES.has(name) || name.endsWith('.log');
 
 /** 需要 GitHub 的 Workflows 权限才能提交的路径 */
 const isWorkflowPath = (rel) => rel.startsWith('.github/workflows/');
@@ -94,7 +96,7 @@ function collect(dir = ROOT, out = []) {
       if (IGNORE_DIRS.has(name)) continue;
       collect(full, out);
     } else {
-      if (IGNORE_FILES.has(name)) continue;
+      if (isIgnoredFile(name)) continue;
       out.push({ rel, full, size: st.size });
     }
   }
@@ -199,25 +201,47 @@ async function main() {
     console.log('· 按 --skip-workflow 跳过 .github/workflows/');
   }
 
+  // 找出远程有、本地已经删掉的文件，仅作提示。
+  // （GitHub 的 create-tree 接口对「删除条目」的校验很挑：带 base_tree 时
+  //  不接受 sha:null，不带 base_tree 时又要求每个条目都有 sha/content。
+  //   本脚本以「整体替换根树」的方式上传，历史上传过的旧文件不会被自动清除，
+  //   如需删除请到 GitHub 网页上操作，或在仓库里建一个新提交。）
+  let stale = [];
+  if (parentSha) {
+    try {
+      const parent = await api(`/repos/${OWNER}/${REPO}/git/commits/${parentSha}`, { token });
+      const remoteTree = await api(`/repos/${OWNER}/${REPO}/git/trees/${parent.tree.sha}?recursive=1`, { token });
+      const localPaths = new Set(treeEntries.map((e) => e.path));
+      stale = remoteTree.tree
+        .filter((t) => t.type === 'blob')
+        .map((t) => t.path)
+        .filter((p) => !localPaths.has(p) && !isWorkflowPath(p));
+      if (stale.length) {
+        console.log(`! 远程有 ${stale.length} 个文件本地已不存在（本脚本不会自动删除）：`);
+        stale.forEach((p) => console.log(`    - ${p}`));
+      }
+    } catch (e) {
+      console.log(`· 无法列出远程文件：${String(e.message).slice(0, 80)}`);
+    }
+  }
+
   let tree;
   let workflowSkipped = false;
+  const buildTree = (list) => api(`/repos/${OWNER}/${REPO}/git/trees`, {
+    method: 'POST',
+    token,
+    body: { tree: list },
+  });
+
   try {
-    tree = await api(`/repos/${OWNER}/${REPO}/git/trees`, {
-      method: 'POST',
-      token,
-      body: { tree: treeEntries },
-    });
+    tree = await buildTree(treeEntries);
   } catch (e) {
     const hasWorkflow = treeEntries.some((x) => isWorkflowPath(x.path));
     if (e.status === 403 && hasWorkflow) {
       workflowSkipped = true;
       treeEntries = treeEntries.filter((x) => !isWorkflowPath(x.path));
       console.log('! 令牌缺少 Workflows 权限，已跳过 .github/workflows/（不影响网页发布，见文末说明）');
-      tree = await api(`/repos/${OWNER}/${REPO}/git/trees`, {
-        method: 'POST',
-        token,
-        body: { tree: treeEntries },
-      });
+      tree = await buildTree(treeEntries);
     } else {
       throw e;
     }
