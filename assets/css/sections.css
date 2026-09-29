@@ -121,7 +121,7 @@
   margin-top: .4rem;
   font-size: .84rem;
   letter-spacing: .1em;
-  color: rgba(255, 255, 255, .95);
+  color: rgba(255, 255, 255, .88);
 }
 
 .hero__title {
@@ -131,8 +131,14 @@
   font-weight: 700;
   line-height: 1.16;
   letter-spacing: .03em;
-  color: #fff;
-  text-shadow: 0 2px 18px rgba(12, 46, 80, .3);
+  /* 描金渐变：比纯白更跳，且金色本就是祥波书院品牌色之一（官网 #e4a823）。
+     蓝底上的对比也足够，深色投影用来保证小屏和弱光下依然读得清。 */
+  background: linear-gradient(178deg, #fff6d8 0%, #ffdc84 34%, #f0ab24 68%, #d98b10 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: #f5c142;                     /* 不支持 background-clip 时的兜底色 */
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 3px 12px rgba(9, 34, 62, .38));
   text-wrap: balance;
 }
 .hero__lead {

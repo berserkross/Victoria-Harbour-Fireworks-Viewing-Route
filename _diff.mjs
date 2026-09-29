@@ -1,57 +1,41 @@
-/** 一次性比对本地与线上 index.html，并打印第一处差异。 */
+/** 线上验收：只做必要的几项检查，避免大量请求导致超时。 */
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 
 const BASE = 'https://berserkross.github.io/Victoria-Harbour-Fireworks-Viewing-Route/';
 const sha = (s) => createHash('sha256').update(s).digest('hex').toUpperCase();
 
-const localHtml = readFileSync('index.html', 'utf8');
-const liveHtml = await (await fetch(BASE + '?cb=' + Date.now(), { cache: 'no-store' })).text();
+const local = readFileSync('index.html', 'utf8');
+const r = await fetch(BASE + '?cb=' + Date.now(), { cache: 'no-store' });
+const live = await r.text();
 
-console.log('本地 sha:', sha(localHtml), ' 字节:', Buffer.byteLength(localHtml));
-console.log('线上 sha:', sha(liveHtml), ' 字节:', Buffer.byteLength(liveHtml));
+console.log('本地 sha:', sha(local), `(${Buffer.byteLength(local)} B)`);
+console.log('线上 sha:', sha(live), `(${Buffer.byteLength(live)} B)`);
+console.log(sha(local) === sha(live) ? '✓ 完全一致 —— 线上就是最新版' : '✗ 不一致');
 
-if (sha(localHtml) === sha(liveHtml)) {
-  console.log('✓ 完全一致');
-} else {
-  const n = Math.min(localHtml.length, liveHtml.length);
-  let i = 0;
-  while (i < n && localHtml[i] === liveHtml[i]) i += 1;
-  console.log('\n第一处差异在字符', i, '/', n);
-  console.log('  本地:', JSON.stringify(localHtml.slice(Math.max(0, i - 50), i + 60)));
-  console.log('  线上:', JSON.stringify(liveHtml.slice(Math.max(0, i - 50), i + 60)));
-  const cr = (s) => (s.match(/\r\n/g) || []).length;
-  console.log('\n  CRLF 数  本地:', cr(localHtml), ' 线上:', cr(liveHtml));
-  const norm = (s) => s.replace(/\r\n/g, '\n');
-  console.log('  忽略换行后:', norm(localHtml) === norm(liveHtml) ? '一致（仅换行差异）' : '仍不同（内容确已变化）');
-  console.log('  本地长度差:', localHtml.length - liveHtml.length);
+console.log('\n内容抽查：');
+const checks = [
+  ['首个官方链接（含 %XX 编码）', 'discoverhongkong.com/tc/events/event.id89562'],
+  ['链接已渲染成 <a>', 'href="https://www.discoverhongkong.com'],
+  ['太平山补充说明', '1 号山顶小巴'],
+  ['宝马山补充说明', '976／968'],
+  ['支付方式标题改为总结', '>总结</h2>'],
+  ['旧标题「一句话」已消失', null],
+  ['Klook 活动链接', 'klook.com/zh-CN/activity/96889'],
+  ['Trip.com 入口', 'trip.com/'],
+];
+for (const [label, needle] of checks) {
+  const hit = needle === null ? !live.includes('>一句话</h2>') : live.includes(needle);
+  console.log(`  ${hit ? '✓' : '✗'} ${label}`);
 }
 
-console.log('\n关键标记：');
-for (const k of ['hero__bg', 'hero__wordmark', 'hero__cloud', 'hero__cover', 'class="stats"', 'class="outro"']) {
-  console.log(`  ${k.padEnd(28)} 本地 ${localHtml.includes(k) ? '有' : '无'}   线上 ${liveHtml.includes(k) ? '有' : '无'}`);
+/* 只抽查首屏与 CSS 这几个关键资源 */
+console.log('\n关键资源：');
+for (const rel of [
+  'assets/css/base.css', 'assets/css/sections.css', 'assets/css/components.css',
+  'assets/js/toc.js', 'assets/img/brand-hoceania-logo.jpg',
+  'assets/img/hero-cover-1600.jpg', 'assets/video/route-to-peak-observatory.mp4',
+]) {
+  const res = await fetch(new URL(rel, BASE).href, { method: 'HEAD' });
+  console.log(`  ${res.status === 200 ? '✓' : '✗'} ${res.status}  ${rel}`);
 }
-
-/* 列出所有 callout，用于人工过一遍语气 */
-console.log('\n全部提示框文案：');
-[...localHtml.matchAll(/<aside class="callout">([\s\S]*?)<\/aside>/g)].forEach((m, i) => {
-  const t = m[1].replace(/<[^>]+>/g, '').replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
-  console.log(`  ${String(i + 1).padStart(2)}. ${t}`);
-});
-
-/* 线上资源逐个 HEAD 检查 */
-console.log('\n线上资源检查：');
-const refs = [...localHtml.matchAll(/(?:src|srcset|href|poster)="([^"]+)"/g)]
-  .flatMap((m) => m[1].split(','))
-  .map((u) => u.trim().replace(/\s+\d+w$/, ''))
-  .filter((u) => u && !/^(https?:|mailto:|#)/.test(u));
-const uniq = [...new Set(refs)];
-let ok = 0;
-const bad = [];
-for (const rel of uniq) {
-  const r = await fetch(new URL(rel, BASE).href, { method: 'GET' });
-  if (r.status === 200) ok += 1; else bad.push(`${r.status} ${rel}`);
-}
-console.log(`  ${ok}/${uniq.length} 返回 200`);
-bad.forEach((b) => console.log('  失败 ' + b));
-
