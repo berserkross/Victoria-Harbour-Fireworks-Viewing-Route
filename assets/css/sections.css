@@ -1,124 +1,161 @@
 /* =============================================================
-   sections.css — 首屏（云海＋实拍）/ 数据条 / 章节 / 关于我们 / 页脚
+   sections.css — 首屏（祥波书院主视图）/ 数据条 / 章节 / 关于我们 / 页脚
    ============================================================= */
 
-/* ------------------------------------------------ 首屏：云海 + 实拍 */
+/* ============================================================
+   首屏 —— 沿用祥波书院八周年主视图的视觉语言
+   底色 #559CD9 天蓝（取自主视图实测）、细白几何线稿、
+   极细大间距字标、一条横穿全幅的白线两端各一个白点。
+   ============================================================ */
 
 .hero {
   position: relative;
   margin-bottom: 2.4rem;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  background: var(--paper);
+  background: #559cd9;
   box-shadow: var(--shadow);
 }
 
-/* 上半：云与天空（呼应官方海报的云海主视觉） */
-.hero__sky {
-  position: relative;
-  padding: 3.4rem 2.4rem 3rem;
+/* 背景：蓝色渐变 + 极淡噪点 + 几何线稿 */
+.hero__bg {
+  position: absolute;
+  inset: 0;
   background:
-    radial-gradient(120% 90% at 18% 0%, #ffffff 0%, rgba(255, 255, 255, 0) 58%),
-    radial-gradient(100% 80% at 88% 8%, rgba(255, 255, 255, .9) 0%, rgba(255, 255, 255, 0) 55%),
-    linear-gradient(178deg, #eaf3fc 0%, #dbe9f8 46%, #cddff4 100%);
-  overflow: hidden;
+    radial-gradient(120% 110% at 78% 8%, rgba(255, 255, 255, .22) 0%, rgba(255, 255, 255, 0) 62%),
+    linear-gradient(168deg, #62a6de 0%, #559cd9 46%, #4a90d0 100%);
+}
+.hero__grain {
+  position: absolute;
+  inset: 0;
+  opacity: .5;
+  mix-blend-mode: soft-light;
+  background-image:
+    radial-gradient(rgba(255, 255, 255, .55) .5px, transparent .6px),
+    radial-gradient(rgba(0, 0, 0, .28) .5px, transparent .6px);
+  background-size: 3px 3px, 4px 4px;
+  background-position: 0 0, 1px 2px;
+}
+.hero__art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.hero__art-lines { fill: none; stroke: rgba(255, 255, 255, .5); stroke-width: 1.4; }
+.hero__art-lines .is-dashed { stroke-dasharray: 9 7; }
+.hero__rule { fill: #fff; stroke: #fff; stroke-width: 1.6; stroke-linecap: round; }
+.hero__rule circle { stroke: none; }
+
+/* 线稿缓缓舒展，呼应主视图里图形「生长」的动作 */
+@media (prefers-reduced-motion: no-preference) {
+  .hero__art-lines {
+    stroke-dasharray: 1600;
+    stroke-dashoffset: 1600;
+    animation: hero-draw 2.6s cubic-bezier(.25, .8, .3, 1) .25s forwards;
+  }
+  .hero__rule {
+    stroke-dasharray: 1400;
+    stroke-dashoffset: 1400;
+    animation: hero-draw 2.2s cubic-bezier(.3, .8, .3, 1) .6s forwards;
+  }
+}
+@keyframes hero-draw { to { stroke-dashoffset: 0; } }
+
+.hero__inner {
+  position: relative;
+  z-index: 2;
+  padding: 3.2rem 2.6rem 3.4rem;
+  max-width: 44rem;
+  color: #fff;
 }
 @media (max-width: 720px) {
-  .hero__sky { padding: 2.4rem 1.2rem 2.2rem; }
+  .hero__inner { padding: 2.2rem 1.3rem 2.6rem; }
 }
 
-/* 三团柔和的云 */
-.hero__cloud {
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(255, 255, 255, .96), rgba(255, 255, 255, 0) 72%);
-  pointer-events: none;
-}
-.hero__cloud--a { width: 460px; height: 210px; left: -8%; top: 8%; }
-.hero__cloud--b { width: 620px; height: 250px; right: -14%; top: 32%; opacity: .82; }
-.hero__cloud--c { width: 380px; height: 170px; left: 34%; bottom: -6%; opacity: .68; }
-
-.hero__inner { position: relative; z-index: 1; max-width: 34rem; }
-
-/* 三标并列：港中深 · 祥波书院 · 海洋影像厂 */
+/* 品牌落款：白底圆徽 + 组织名（Logo 贴在主视图上） */
 .hero__org {
-  margin: 0 0 1.5rem;
+  margin: 0 0 1.7rem;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: .5rem;
-  font-size: .74rem;
-  letter-spacing: .06em;
-  color: var(--ocean-deep);
+  gap: .7rem;
 }
-.hero__org span { white-space: nowrap; }
-.hero__org i {
-  font-style: normal;
-  color: var(--ocean);
-  opacity: .45;
-  font-size: .7rem;
+.hero__logo {
+  width: 52px;
+  height: 52px;
+  flex: none;
+  border-radius: 50%;
+  background: #fff;
+  padding: 4px;
+  object-fit: contain;
+  box-shadow: 0 6px 18px -8px rgba(10, 40, 70, .55), 0 0 0 1px rgba(255, 255, 255, .6);
+}
+.hero__org-text { display: block; line-height: 1.25; }
+.hero__org-cn {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+}
+.hero__org-en {
+  display: block;
+  margin-top: .12rem;
+  font-family: var(--font-num);
+  font-size: .6rem;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .74);
 }
 
-.hero__kicker { margin: 0 0 .9rem; }
-.hero__kicker-cn {
-  display: block;
-  font-size: .82rem;
-  font-weight: 600;
-  letter-spacing: .1em;
-  color: var(--ocean);
-}
+.hero__kicker { margin: 0 0 .8rem; }
 .hero__kicker-en {
   display: block;
-  margin-top: .3rem;
   font-family: var(--font-num);
   font-size: .64rem;
-  letter-spacing: .24em;
+  letter-spacing: .28em;
   text-transform: uppercase;
-  color: var(--ink-4);
+  color: rgba(255, 255, 255, .8);
+}
+.hero__kicker-cn {
+  display: block;
+  margin-top: .4rem;
+  font-size: .84rem;
+  letter-spacing: .1em;
+  color: rgba(255, 255, 255, .95);
 }
 
 .hero__title {
-  margin: 0 0 .8rem;
+  margin: 0 0 .85rem;
   font-family: var(--font-serif);
-  font-size: clamp(2.2rem, 6vw, 3.5rem);
+  font-size: clamp(2.3rem, 6.4vw, 3.7rem);
   font-weight: 700;
   line-height: 1.16;
-  letter-spacing: .01em;
-  color: var(--ink);
+  letter-spacing: .03em;
+  color: #fff;
+  text-shadow: 0 2px 18px rgba(12, 46, 80, .3);
   text-wrap: balance;
 }
 .hero__lead {
-  margin: 0 0 1.6rem;
+  margin: 0 0 1.8rem;
   max-width: 30rem;
-  font-size: 1rem;
-  color: var(--ink-3);
+  font-size: 1.02rem;
   line-height: 1.8;
+  color: rgba(255, 255, 255, .92);
 }
 
 .hero__cta { margin: 0; display: flex; flex-wrap: wrap; gap: .6rem; }
 
-/* 下半：实拍封面 */
-.hero__cover {
-  position: relative;
-  margin: 0;
-  background: #0d1219;
-}
-.hero__cover img {
-  width: 100%;
-  display: block;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-}
-.hero__cover figcaption {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  padding: .55rem 1rem;
-  font-size: .7rem;
-  letter-spacing: .05em;
-  color: rgba(255, 255, 255, .82);
-  background: linear-gradient(90deg, rgba(6, 10, 16, .62), rgba(6, 10, 16, 0));
-  width: 100%;
+/* 底部大间距字标，同主视图的处理 */
+.hero__wordmark {
+  margin: 2.8rem 0 0;
+  font-family: var(--font-num);
+  font-size: clamp(.9rem, 4.2vw, 1.5rem);
+  font-weight: 200;
+  letter-spacing: .52em;
+  text-indent: .52em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .9);
+  white-space: nowrap;
 }
 
 /* ---------------------------------------------------------- 数据条 */

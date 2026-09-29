@@ -37,6 +37,22 @@
 }
 .btn--ghost:hover { background: var(--ocean-soft); color: var(--ocean-deep); }
 
+/* 用于蓝色首屏上的两种按钮 */
+.btn--light {
+  background: #fff;
+  color: #1a4b7a;
+  box-shadow: 0 10px 26px -14px rgba(8, 34, 60, .8);
+}
+.btn--light:hover { background: #f2f8ff; color: #123a60; }
+
+.btn--outline {
+  background: rgba(255, 255, 255, .1);
+  color: #fff;
+  border-color: rgba(255, 255, 255, .62);
+  backdrop-filter: blur(4px);
+}
+.btn--outline:hover { background: rgba(255, 255, 255, .2); color: #fff; border-color: #fff; }
+
 /* ------------------------------------------------------- 提示块 */
 
 .callout {

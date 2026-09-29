@@ -68,36 +68,50 @@
 
   <main class="main" id="main">
 
-    <!-- ============ 首屏：云海（上） + 实拍（下）============ -->
+    <!-- ============ 首屏：沿用祥波书院主视图的视觉语言 ============ -->
     <section class="hero">
-      <div class="hero__sky" aria-hidden="true">
-        <span class="hero__cloud hero__cloud--a"></span>
-        <span class="hero__cloud hero__cloud--b"></span>
-        <span class="hero__cloud hero__cloud--c"></span>
+      <div class="hero__bg" aria-hidden="true">
+        <span class="hero__grain"></span>
+        <svg class="hero__art" viewBox="0 0 1200 520" preserveAspectRatio="xMidYMid slice" focusable="false">
+          <g class="hero__art-lines">
+            <circle cx="1010" cy="90" r="150" />
+            <circle cx="1080" cy="330" r="104" class="is-dashed" />
+            <rect x="905" y="26" width="150" height="182" rx="24" />
+            <circle cx="1035" cy="128" r="30" />
+            <path d="M118 470 C 250 300, 430 336, 560 232" />
+          </g>
+          <g class="hero__rule">
+            <circle cx="60" cy="392" r="5.5" />
+            <line x1="60" y1="392" x2="1140" y2="392" />
+            <circle cx="1140" cy="392" r="5.5" />
+          </g>
+        </svg>
       </div>
 
       <div class="hero__inner">
         <p class="hero__org">
-          {{BRAND_PARENTS}}
+          <img class="hero__logo" src="{{BRAND_LOGO}}" alt="{{BRAND_ORG}} {{BRAND_ORG_EN}}" width="52" height="52">
+          <span class="hero__org-text">
+            <span class="hero__org-cn">{{BRAND_ORG}}</span>
+            <span class="hero__org-en">{{BRAND_ORG_EN}}</span>
+          </span>
         </p>
+
         <p class="hero__kicker">
-          <span class="hero__kicker-cn">{{HERO_KICKER}}</span>
           <span class="hero__kicker-en">{{HERO_KICKER_EN}}</span>
+          <span class="hero__kicker-cn">{{HERO_KICKER}}</span>
         </p>
+
         <h1 class="hero__title">{{HERO_TITLE}}</h1>
         <p class="hero__lead">{{HERO_LEAD}}</p>
 
         <p class="hero__cta">
-          <a class="btn btn--primary" href="{{CTA_PRIMARY_HREF}}" target="_blank" rel="noopener">{{CTA_PRIMARY_LABEL}}</a>
-          <a class="btn btn--ghost" href="{{CTA_SECONDARY_HREF}}" target="_blank" rel="noopener">{{CTA_SECONDARY_LABEL}}</a>
+          <a class="btn btn--light" href="{{CTA_PRIMARY_HREF}}" target="_blank" rel="noopener">{{CTA_PRIMARY_LABEL}}</a>
+          <a class="btn btn--outline" href="{{CTA_SECONDARY_HREF}}" target="_blank" rel="noopener">{{CTA_SECONDARY_LABEL}}</a>
         </p>
-      </div>
 
-      <figure class="hero__cover">
-        <img src="{{HERO_COVER}}" srcset="{{HERO_COVER_900}} 900w, {{HERO_COVER_1600}} 1600w, {{HERO_COVER}} 2400w"
-             sizes="(max-width: 720px) 100vw, 1100px" alt="{{HERO_COVER_ALT}}" width="2400" height="1800" fetchpriority="high" decoding="async">
-        <figcaption>{{HERO_COVER_CREDIT}}</figcaption>
-      </figure>
+        <p class="hero__wordmark" aria-hidden="true">HARMONIA</p>
+      </div>
     </section>
 
     <!-- ============ 数据条 ============ -->

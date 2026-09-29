@@ -54,12 +54,11 @@
     { "id": "intro",     "label": "写在前面", "file": "00-intro.md",     "num": "—",  "en": "INTRO" },
     { "id": "prep",      "label": "行前须知", "file": "05-prep.md",      "num": "01", "en": "BEFORE YOU GO" },
     { "id": "routes",    "label": "四条路线", "file": "10-routes.md",    "num": "02", "en": "ROUTES" },
-    { "id": "route15",   "label": "路线一点五・付费赏烟花", "file": "15-route1-5-paid.md", "num": "03", "en": "THE EASY WAY" },
-    { "id": "route3",    "label": "具体路线・太平山", "file": "20-route3-peak.md", "num": "04", "en": "THE PEAK" },
-    { "id": "route4",    "label": "具体路线・宝马山", "file": "30-route4-braemar.md", "num": "05", "en": "BRAEMAR HILL" },
-    { "id": "payment",   "label": "支付方式", "file": "40-payment.md",   "num": "06", "en": "PAYMENT" },
-    { "id": "octopus",   "label": "八达通",   "file": "50-octopus.md",   "num": "07", "en": "OCTOPUS" },
-    { "id": "checklist", "label": "出发前检查清单", "file": "60-checklist.md", "num": "08", "en": "CHECKLIST" }
+    { "id": "route3",    "label": "具体路线・太平山", "file": "20-route3-peak.md", "num": "03", "en": "THE PEAK" },
+    { "id": "route4",    "label": "具体路线・宝马山", "file": "30-route4-braemar.md", "num": "04", "en": "BRAEMAR HILL" },
+    { "id": "payment",   "label": "支付方式", "file": "40-payment.md",   "num": "05", "en": "PAYMENT" },
+    { "id": "octopus",   "label": "八达通",   "file": "50-octopus.md",   "num": "06", "en": "OCTOPUS" },
+    { "id": "checklist", "label": "出发前检查清单", "file": "60-checklist.md", "num": "07", "en": "CHECKLIST" }
   ],
 
   "footer": {
