@@ -70,6 +70,7 @@ console.log('\n[4] 本地资源');
 const refs = [...html.matchAll(/(?:src|srcset|href|poster)="([^"]+)"/g)]
   .flatMap((m) => m[1].split(','))
   .map((u) => u.trim().replace(/\s+\d+w$/, ''))
+  .map((u) => u.split('?')[0].split('#')[0])          // 去掉 ?v= 缓存串与锚点
   .filter((u) => u && !/^(https?:|mailto:|#|data:)/.test(u));
 const uniq = [...new Set(refs)];
 const missing = uniq.filter((r) => !existsSync(join('.', r.replace(/\//g, '\\'))));

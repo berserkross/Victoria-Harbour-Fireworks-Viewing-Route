@@ -17,6 +17,20 @@ import { fileURLToPath } from 'node:url';
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const P = (...p) => join(ROOT, ...p);
 
+/**
+ * 给 css/js 链接加内容哈希，例如 assets/css/base.css?v=ab12cd34
+ *
+ * 为什么必须这么做：GitHub Pages 对所有静态资源发 Cache-Control: max-age=600，
+ * 浏览器会把 CSS/JS 缓存 10 分钟。没有这个查询串，改完样式后访客会继续用旧文件，
+ * 表现为「页面完全没变化」。加了哈希，文件一改链接就变，浏览器必然重新拉取。
+ */
+function versioned(relPath, n = 8) {
+  const full = P(relPath);
+  if (!existsSync(full)) return relPath;
+  const h = createHash('sha1').update(readFileSync(full)).digest('hex').slice(0, n);
+  return `${relPath}?v=${h}`;
+}
+
 /* ------------------------------------------------------------------ 工具 */
 
 const escapeHtml = (s) =>
@@ -647,16 +661,30 @@ ${t.num ? `<span class="toc__num">${escapeHtml(t.num)}</span>` : ''}<span class=
   const leftover = html.match(/\{\{[A-Z_]+\}\}/g);
   if (leftover) throw new Error('模板里还有未替换的占位符：' + [...new Set(leftover)].join(', '));
 
-  writeFileSync(P('index.html'), html, 'utf8');
-
   // assets/src → 根目录，保证 index.html 直接可用
   mkdirSync(P('assets'), { recursive: true });
   cpSync(P('src', 'css'), P('assets', 'css'), { recursive: true });
   cpSync(P('src', 'js'), P('assets', 'js'), { recursive: true });
 
+  // 给所有 CSS/JS 引用加内容哈希，绕开 GitHub Pages 的 10 分钟缓存。
+  // 必须放在 cpSync 之后，读到的才是最终产物。
+  let stamped = 0;
+  html = html.replace(
+    /(href|src)="(assets\/(?:css|js)\/[^"?]+\.(?:css|js))"/g,
+    (whole, attr, rel) => {
+      const v = versioned(rel);
+      if (v === rel) return whole;
+      stamped += 1;
+      return `${attr}="${v}"`;
+    }
+  );
+
+  writeFileSync(P('index.html'), html, 'utf8');
+
   console.log(`✓ index.html  (${(Buffer.byteLength(html) / 1024).toFixed(1)} KB)`);
   console.log(`✓ 章节 ${toc.length} 个，目录条目 ${toc.reduce((n, t) => n + t.children.length, 0)} 条`);
   console.log(`✓ assets/css, assets/js 已同步`);
+  console.log(`✓ 已给 ${stamped} 个 CSS/JS 链接加上内容哈希（破除缓存）`);
 }
 
 main();
