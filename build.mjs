@@ -253,12 +253,23 @@ function renderChecklist(lines) {
     }
     const it = /^-\s+(.+)$/.exec(raw);
     if (it) {
-      const [text, note] = it[1].split('|').map((x) => x.trim());
+      // 一行三段的写法：  正文 | 小字注解 | 图标1::图标2
+      const parts = it[1].split('|').map((x) => x.trim());
+      const [text, note, iconsRaw] = parts;
+      const icons = (iconsRaw ?? '')
+        .split('::')
+        .map((s) => s.trim())
+        .filter(Boolean)
+        .map((pair) => {
+          const [src, alt] = pair.split('##').map((s) => (s ?? '').trim());
+          return { src, alt: alt || '' };
+        })
+        .filter((i) => i.src);
       if (!groups.length) {
         gi += 1;
         groups.push({ id: 'g' + gi, label: '', items: [] });
       }
-      groups[gi - 1].items.push({ text, note: note || '' });
+      groups[gi - 1].items.push({ text, note: note || '', icons });
     }
   }
   const body = groups
@@ -266,11 +277,19 @@ function renderChecklist(lines) {
       const lis = grp.items
         .map((it, i) => {
           const id = `${grp.id}-i${i + 1}`;
+          const icons = (it.icons ?? []).length
+            ? `<span class="check__apps">${it.icons
+                .map((ic) => `<span class="check__app"><img src="${escapeHtml(safeUrl(ic.src))}" alt="" width="18" height="18" loading="lazy" decoding="async">${escapeHtml(ic.alt)}</span>`)
+                .join('')}</span>`
+            : '';
+          const note = it.note || icons
+            ? `<span class="check__note">${it.note ? inline(it.note) : ''}${icons}</span>`
+            : '';
           return `<li class="check">
 <input type="checkbox" id="${id}" data-check="${id}">
 <label for="${id}">
 <span class="check__text">${inline(it.text)}</span>
-${it.note ? `<span class="check__note">${inline(it.note)}</span>` : ''}
+${note}
 </label>
 </li>`;
         })

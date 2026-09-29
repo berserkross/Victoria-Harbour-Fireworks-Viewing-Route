@@ -486,6 +486,35 @@ img.inline-img {
 .check label { cursor: pointer; min-width: 0; }
 .check__text { display: block; font-size: .93rem; color: var(--ink-2); }
 .check__note { display: block; margin-top: .18rem; font-size: .78rem; color: var(--ink-4); }
+
+/* 小字注解旁的应用推荐：图标 + 名字，跟在注解后面，尺寸压到不抢视线 */
+.check__apps {
+  display: inline-flex;
+  align-items: center;
+  gap: .75rem;
+  margin-left: .65rem;
+  vertical-align: -4px;
+}
+.check__app {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+  font-size: .74rem;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.check__apps img {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  object-fit: cover;
+  box-shadow: 0 0 0 1px rgba(16, 23, 32, .12);
+}
+/* 手机上注解换行，图标跟着折下去 */
+@media (max-width: 480px) {
+  .check__apps { vertical-align: -3px; gap: .45rem; margin-left: .4rem; }
+  .check__app { font-size: .7rem; }
+}
 .check input:checked + label .check__text { color: var(--ink-4); text-decoration: line-through; }
 .check input:checked + label .check__note { opacity: .6; }
 
