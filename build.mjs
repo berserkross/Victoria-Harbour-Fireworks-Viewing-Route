@@ -700,6 +700,11 @@ ${e.contact ? `<p class="egg__contact">${inline(e.contact)}</p>` : ''}
   const leftover = html.match(/\{\{[A-Z_]+\}\}/g);
   if (leftover) throw new Error('模板里还有未替换的占位符：' + [...new Set(leftover)].join(', '));
 
+  // 首屏小提醒：hero.tip 留空时整块连图标一起去掉，不留空壳胶囊
+  if (!vars.HERO_TIP) {
+    html = html.replace(/[ \t]*<!--HERO_TIP-->[\s\S]*?<!--\/HERO_TIP-->[ \t]*\r?\n/, '');
+  }
+
   // assets/src → 根目录，保证 index.html 直接可用
   mkdirSync(P('assets'), { recursive: true });
   cpSync(P('src', 'css'), P('assets', 'css'), { recursive: true });
