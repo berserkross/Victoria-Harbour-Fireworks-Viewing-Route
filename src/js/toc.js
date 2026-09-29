@@ -19,16 +19,25 @@
 
   /* ---------------------------------------------- 移动端抽屉 */
 
+  /* 抽屉打开时 body 会被设成 position:fixed（防止背后页面跟着滚），
+     这会丢掉当前的滚动位置，所以开之前记下来、关的时候还原。 */
+  var lockedScrollY = 0;
+
   function closeNav() {
+    var wasOpen = body.classList.contains('nav-open');
     body.classList.remove('nav-open');
+    body.style.top = '';
     if (toggle) toggle.setAttribute('aria-expanded', 'false');
     if (backdrop) {
       backdrop.remove();
       backdrop = null;
     }
+    if (wasOpen) window.scrollTo(0, lockedScrollY);
   }
 
   function openNav() {
+    lockedScrollY = window.scrollY || window.pageYOffset || 0;
+    body.style.top = -lockedScrollY + 'px';
     body.classList.add('nav-open');
     if (toggle) toggle.setAttribute('aria-expanded', 'true');
     if (!backdrop) {
@@ -99,8 +108,14 @@
     topLinks.forEach(function (a) {
       a.classList.toggle('is-active', a.getAttribute('href') === '#' + id);
     });
+    /* 把当前高亮项滚进可视范围。
+       注意：手机上抽屉是隐藏在屏幕外的（translateX 移出去），
+       如果这时候还去改 scrollTop，等于在偷偷滚一个看不见的列表 ——
+       用户下次打开抽屉时会停在一个莫名其妙的位置。
+       所以先判断目录是否真的在屏幕上，不可见就不动它。 */
+    var visible = !toc || toc.getBoundingClientRect().right > 0;
     var active = toc && toc.querySelector('.toc__link.is-active');
-    if (active && toc.scrollHeight > toc.clientHeight) {
+    if (visible && active && toc.scrollHeight > toc.clientHeight) {
       var t = active.offsetTop - toc.clientHeight / 2 + active.offsetHeight / 2;
       var want = Math.max(0, Math.min(t, toc.scrollHeight - toc.clientHeight));
       if (Math.abs(toc.scrollTop - want) > 60) toc.scrollTop = want;

@@ -266,6 +266,10 @@
   .navtoggle { display: block; }
   .topnav { display: none; }
 
+  /* 抽屉：fixed + top/bottom 固定，但必须显式给高度上限并允许滚动，
+     否则内容比屏幕高时下面那截会被裁掉、且滚不到（手机端侧栏滚不动的根因）。
+     用 dvh（动态视口高度）兼容手机浏览器地址栏收放导致的视口变化，
+     先写 vh 兜底，再写 dvh 覆盖。 */
   .toc {
     position: fixed;
     top: 0;
@@ -273,12 +277,18 @@
     bottom: 0;
     z-index: 80;
     width: min(84vw, 330px);
-    max-height: none;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100vh;
+    max-height: 100dvh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
     margin: 0;
     border-left: 0;
     border-right: 1px solid var(--line);
     background: var(--paper);
-    padding: 1.5rem 1.3rem 2.6rem;
+    padding: 1.5rem 1.3rem calc(2.6rem + env(safe-area-inset-bottom, 0px));
     transform: translateX(-102%);
     transition: transform .28s cubic-bezier(.22, .61, .36, 1);
     box-shadow: 24px 0 60px -34px rgba(0, 0, 0, .85);
@@ -290,6 +300,15 @@
     z-index: 70;
     background: var(--scrim);
     backdrop-filter: blur(2px);
+  }
+
+  /* 抽屉打开时锁住背后页面：否则手指滑动会滚到背景上，关掉后位置还错乱。
+     用「固定定位 + 还原滚动位置」而不是单纯 overflow:hidden，
+     后者在 iOS Safari 上会让页面跳回顶部。 */
+  body.nav-open {
+    position: fixed;
+    width: 100%;
+    overflow: hidden;
   }
   .main { padding-top: 1.3rem; }
 }
