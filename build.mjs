@@ -625,19 +625,19 @@ ${(g.lines ?? []).map((l) => `<li>${inline(l)}</li>`).join('\n')}
   const eggHtml = e.enabled === false ? '' : `
 <details class="egg">
 <summary class="egg__summary">
-<span class="egg__hint">${escapeHtml(e.hint ?? '彩蛋')}</span>
 <span class="egg__mark" aria-hidden="true">🎁</span>
+<span class="egg__hint">${escapeHtml(e.hint ?? 'Click here!')}</span>
 </summary>
 <div class="egg__body">
 <p class="egg__congrats">${inline(e.congrats ?? '')}</p>
-<dl class="footer__credit egg__credit">
+${b.credit || b.creditEn ? `<dl class="footer__credit egg__credit">
 <div><dt>${escapeHtml(b.creditEn ?? '')}</dt><dd>${escapeHtml(b.credit ?? '')}</dd></div>
-<div><dt>PHOTO CREDIT</dt><dd>${escapeHtml(b.photoCredit ?? '')}</dd></div>
-</dl>
+</dl>` : ''}
 <div class="egg__feed">
 ${e.mascot ? `<img class="egg__mascot" src="${escapeHtml(safeUrl(e.mascot))}" alt="${escapeHtml(e.mascotAlt ?? '')}" width="170" height="170" loading="lazy" decoding="async">` : ''}
 ${e.feed ? `<p class="egg__feed-text">${inline(e.feed)}</p>` : ''}
 ${e.payQr ? `<img class="egg__pay" src="${escapeHtml(safeUrl(e.payQr))}" alt="${escapeHtml(e.payAlt ?? '')}" loading="lazy" decoding="async">` : ''}
+${e.contact ? `<p class="egg__contact">${inline(e.contact)}</p>` : ''}
 </div>
 </div>
 </details>`;
@@ -661,7 +661,6 @@ ${e.payQr ? `<img class="egg__pay" src="${escapeHtml(safeUrl(e.payQr))}" alt="${
     BRAND_PRODUCED_BY: b.producedBy ?? '',
     BRAND_CREDIT: b.credit ?? '',
     BRAND_CREDIT_EN: b.creditEn ?? '',
-    BRAND_PHOTO_CREDIT: b.photoCredit ?? '',
     BRAND_LOGO: b.logo ?? '',
     LINK_COLLEGE: link.college ?? '#',
     LINK_ORG: link.org ?? '#',
@@ -689,10 +688,6 @@ ${e.payQr ? `<img class="egg__pay" src="${escapeHtml(safeUrl(e.payQr))}" alt="${
     GROUP: groupHtml,
     EGG: eggHtml,
 
-    FOOTER_NOTE: cfg.footer.note,
-    FOOTER_BG_CREDIT: cfg.footer.bgCredit
-      ? `<p class="footer__bg-credit">${inline(cfg.footer.bgCredit)}</p>`
-      : '',
     FOOTER_DISCLAIMER: cfg.footer.disclaimer,
     BUILD_DATE: buildDate,
   };

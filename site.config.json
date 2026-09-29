@@ -21,7 +21,6 @@
     "producedBy": "出品",
     "credit": "策划 / 摄影 / 编辑　杨天瑞",
     "creditEn": "PLANNING / PHOTOGRAPHY / EDITING",
-    "photoCredit": "摄影：杨天瑞",
     "logo": "assets/img/brand-hoceania-logo.jpg",
     "links": {
       "college": "https://harmonia.cuhk.edu.cn/",
@@ -65,13 +64,14 @@
 
   "egg": {
     "enabled": true,
-    "hint": "彩蛋",
+    "hint": "Click here!",
     "congrats": "🥰 恭喜你发现彩蛋 🎉",
     "mascot": "assets/img/egg-deepseek.png",
     "mascotAlt": "DeepSeek 的鲸鱼娘形象",
     "feed": "“喜欢的话，可以投喂我 token 小蛋糕😘”",
     "payQr": "assets/img/egg-pay-qr.png",
-    "payAlt": "海洋影像厂的微信经营收款码"
+    "payAlt": "海洋影像厂的微信经营收款码",
+    "contact": "关于网站有任何意见，或者只是想找我聊聊天，欢迎 dd 我！！！ 📫 tianruiyang@link.cuhk.edu.cn"
   },
 
   "nav": [
@@ -86,8 +86,6 @@
   ],
 
   "footer": {
-    "note": "本页内容依据海洋影像厂原始攻略《国庆维港烟花路线》（Markdown / XMind / PDF）整理排版，图源同源。",
-    "bgCredit": "页面背景烟花图：来源待补（建议写「摄影：XXX」或「图源：XXX」）",
     "disclaimer": "路线信息具有时效性：烟花汇演安排、巴士／小巴班次与票价、商场入场安排均可能变动，出行前请以官方最新公告为准。"
   }
 }

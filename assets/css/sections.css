@@ -468,9 +468,20 @@ h4:hover > .anchor { opacity: 1; color: var(--ocean); }
 .egg__summary::-webkit-details-marker { display: none; }
 .egg__summary:hover { background: var(--chip); color: var(--ink-2); }
 .egg__summary:focus-visible { outline: none; box-shadow: var(--ring); border-radius: var(--radius); }
-.egg__hint { letter-spacing: .1em; }
-.egg__mark {
+/* 「Click here!」用花体（手写体）。
+   这类字体各平台自带的不同，所以给一串候选，逐级回退；
+   最后兜底 cursive，实在没有也会落到系统的手写体风格。 */
+.egg__hint {
   margin-left: auto;
+  font-family: "Segoe Script", "Brush Script MT", "Lucida Handwriting",
+               "Apple Chancery", "Snell Roundhand", cursive;
+  font-size: 1.15rem;
+  font-style: italic;
+  letter-spacing: .02em;
+  color: var(--ink-2);
+}
+.egg__summary:hover .egg__hint { color: var(--ocean); }
+.egg__mark {
   font-size: 1rem;
   transition: transform .25s;
 }
@@ -531,10 +542,26 @@ h4:hover > .anchor { opacity: 1; color: var(--ocean); }
   border-radius: var(--radius);
   box-shadow: 0 8px 24px -14px rgba(0, 0, 0, .7);
 }
+/* 联系方式：跟在收款码下面 */
+.egg__contact {
+  margin: 1.6rem auto 0;
+  max-width: 30rem;
+  padding: .9rem 1.1rem;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--chip);
+  font-size: .86rem;
+  line-height: 1.9;
+  color: var(--ink-2);
+  text-align: center;
+  word-break: break-word;
+}
+.egg__contact a { color: var(--ocean); }
 
 @media (max-width: 480px) {
   .egg__mascot { width: 140px; height: 140px; }
   .egg__pay { width: 78%; }
+  .egg__hint { font-size: 1.05rem; }
 }
 
 /* ------------------------------------------- 页尾 CTA「关于我们」 */
